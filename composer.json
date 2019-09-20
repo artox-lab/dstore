@@ -1,0 +1,21 @@
+{
+    "name": "artox-lab/dstore",
+    "description": "Abstracts for store documents to redis, index them and easy control consistency.",
+    "type": "library",
+    "require": {
+        "predis/predis": "^2.0@dev"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artur Turchin",
+            "email": "a.turchin@artox.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "DStore\\": "src/"
+        }
+    }
+}
