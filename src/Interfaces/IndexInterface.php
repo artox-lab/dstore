@@ -13,11 +13,25 @@ interface IndexInterface
 {
 
     /**
-     * Relations between documents
+     * Name of index, use only letters in snake_case
      *
-     * @return array
+     * @return string
      */
-    public function relations() : array;
+    public function getName() : string ;
+
+    /**
+     * ID of document
+     *
+     * @return string
+     */
+    public function getDocId() : string ;
+
+    /**
+     * Value for filtering documents
+     *
+     * @return string|array
+     */
+    public function getValue();
 
     /**
      * Indexing of document

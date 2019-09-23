@@ -19,7 +19,7 @@ class KeysResolver
      *
      * @return string
      */
-    public function makeKey(string $docType) : string
+    public function makeKey(string $docType): string
     {
         return sprintf('store:doc:%s', $docType);
     }
@@ -32,7 +32,7 @@ class KeysResolver
      *
      * @return string
      */
-    public function makeWatchingKey(string $docType, string $id) : string
+    public function makeWatchingOnDocKey(string $docType, string $id): string
     {
         return sprintf('store:watching:%s:%s', $docType, $id);
     }
@@ -42,12 +42,45 @@ class KeysResolver
      *
      * @param string $docType Type of document
      * @param string $index   Index name
+     * @param array  $values  Values
      *
      * @return string
      */
-    public function makeIndexKey(string $docType, string $index) : string
+    public function makeIndexKey(string $docType, string $index, ...$values): string
     {
-        return sprintf('%s:index:%s', $this->makeKey($docType), $index);
+        $key = sprintf('%s:index:%s', $this->makeKey($docType), $index);
+
+        if (empty($values) === false) {
+            $key .= (':' . implode(':', $values));
+        }
+
+        return  $key;
+    }
+
+    /**
+     * Make index system key (where we can find actual values)
+     *
+     * @param string $docType Type of document
+     *
+     * @return string
+     */
+    public function makeIndexSysKey(string $docType): string
+    {
+        return sprintf('store:sys:%s:indexes', $docType);
+    }
+
+    /**
+     * Make key of watching changes on document index
+     *
+     * @param string $docType Type of document
+     * @param string $id      ID of document
+     * @param string $index   Name of index
+     *
+     * @return string
+     */
+    public function makeWatchingOnDocIndexKey(string $docType, string $id, string $index): string
+    {
+        return sprintf('store:watching:%s:%s:%s', $docType, $id, $index);
     }
 
 }

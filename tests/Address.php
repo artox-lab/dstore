@@ -13,6 +13,8 @@ namespace DStore\Tests;
 class Address
 {
     public $id;
+    
+    public $city;
 
     public $street;
 

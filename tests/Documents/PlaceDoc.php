@@ -28,7 +28,7 @@ class PlaceDoc
     public function relations() : array
     {
         return [
-            'address'  => \DStore\Redis\Relations\HashRelation::class,
+            'address'  => [\DStore\Redis\Relations\HashRelation::class],
             'rubrics'  => \DStore\Redis\Relations\HashRelation::class,
             'services' => \DStore\Redis\Relations\HashRelation::class,
             'cities'   => \DStore\Redis\Relations\HashRelation::class,

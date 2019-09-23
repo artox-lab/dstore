@@ -84,7 +84,7 @@ abstract class AbstractGateway implements GatewayInterface
      */
     protected function watchOnDocumentChanges(DocumentInterface $doc) : void
     {
-        $this->redis->watch($this->keys->makeWatchingKey($doc->getDocType(), $doc->getId()));
+        $this->redis->watch($this->keys->makeWatchingOnDocKey($doc->getDocType(), $doc->getId()));
     }
 
     /**
@@ -97,7 +97,7 @@ abstract class AbstractGateway implements GatewayInterface
     protected function beginTransaction(DocumentInterface $doc) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingKey($doc->getDocType(), $doc->getId()), 1, "");
+        $transaction->setex($this->keys->makeWatchingOnDocKey($doc->getDocType(), $doc->getId()), 1, "");
 
         return $transaction;
     }

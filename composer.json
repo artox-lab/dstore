@@ -3,7 +3,8 @@
     "description": "Abstracts for store documents to redis, index them and easy control consistency.",
     "type": "library",
     "require": {
-        "predis/predis": "^2.0@dev"
+        "predis/predis": "^2.0@dev",
+        "ext-json": "*"
     },
     "license": "MIT",
     "authors": [

@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace DStore\Tests;
 
+use ArtoxLab\Domain\RelatedCollection;
+use ArtoxLab\Domain\RelatedItem;
+
 class Place
 {
     public $id;
@@ -21,17 +24,17 @@ class Place
     public $address;
 
     /**
-     * @var Rubric[]
+     * @var Rubric[]|RelatedCollection
      */
     public $rubrics;
 
     /**
-     * @var Service[]
+     * @var Service[]|RelatedCollection
      */
     public $services;
 
     /**
-     * @var City[]
+     * @var City[]|RelatedItem
      */
     public $cities;
 
