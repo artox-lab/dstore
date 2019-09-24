@@ -34,7 +34,7 @@ class Place
     public $services;
 
     /**
-     * @var City[]|RelatedItem
+     * @var City[]|RelatedCollection
      */
     public $cities;
 

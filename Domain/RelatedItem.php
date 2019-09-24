@@ -45,6 +45,16 @@ class RelatedItem
     }
 
     /**
+     * Entity
+     *
+     * @return Entity|object
+     */
+    public function get()
+    {
+        return $this->entity;
+    }
+
+    /**
      * Update related item
      *
      * @param object $item Related item

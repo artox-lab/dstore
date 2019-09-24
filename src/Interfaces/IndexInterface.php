@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DStore\Interfaces;
 
+use DStore\Redis\Indexes\State;
+
 interface IndexInterface
 {
 
@@ -29,7 +31,7 @@ interface IndexInterface
     /**
      * Value for filtering documents
      *
-     * @return string|array
+     * @return string|array|State
      */
     public function getNewState();
 

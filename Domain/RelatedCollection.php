@@ -116,7 +116,7 @@ class RelatedCollection implements ArrayAccess
      *
      * @return array
      */
-    public function added() : array
+    public function getAddedItems() : array
     {
         return $this->added;
     }
@@ -126,7 +126,7 @@ class RelatedCollection implements ArrayAccess
      *
      * @return array
      */
-    public function deleted() : array
+    public function getDeletedItems() : array
     {
         return $this->deleted;
     }

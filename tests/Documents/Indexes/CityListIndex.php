@@ -43,7 +43,12 @@ class CityListIndex extends \DStore\Redis\Indexes\ListIndex
      */
     public function getNewState()
     {
-        return $this->place->cities;
+        return $this->state->new(
+            $this->place->cities,
+            function (City $city) : string {
+                return (string) $city->id;
+            }
+        );
     }
 
 }
