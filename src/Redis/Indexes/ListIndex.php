@@ -10,11 +10,15 @@ declare(strict_types=1);
 namespace DStore\Redis\Indexes;
 
 use ArtoxLab\Domain\RelatedCollection;
+use ArtoxLab\Domain\RelatedItem;
 use DStore\Interfaces\DocumentInterface;
 use DStore\Interfaces\IndexInterface;
 use DStore\Redis\KeysResolver;
 use Predis\Client;
 use Predis\ClientInterface;
+use Predis\CommunicationException;
+use Predis\Response\ServerException;
+use Predis\Transaction\AbortedMultiExecException;
 use Predis\Transaction\MultiExec;
 
 abstract class ListIndex implements IndexInterface
@@ -36,7 +40,8 @@ abstract class ListIndex implements IndexInterface
     /**
      * ListIndex constructor.
      *
-     * @param KeysResolver $keys Keys
+     * @param ClientInterface $redis Redis client
+     * @param KeysResolver    $keys  Keys
      */
     public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
@@ -53,25 +58,46 @@ abstract class ListIndex implements IndexInterface
      */
     public function index(DocumentInterface $doc): void
     {
+        $new = $this->getNewState();
+
+        if ($new instanceof RelatedCollection) {
+            $this->handleRelatedCollection($doc, $new);
+            return;
+        }
+
+        if ($new instanceof RelatedItem) {
+            $this->handleRelatedItem($doc, $new);
+            return;
+        }
+
         $name     = $this->getName();
         $sysKey   = $this->keys->makeIndexSysKey($doc->getDocType());
         $sysField = $this->getDocId() . ':' . $name;
+        $this->redis->watch($this->keys->makeWatchingOnDocIndexKey($doc->getDocType(), $doc->getId(), $name));
+        $actual      = (array) json_decode($this->redis->hget($sysKey, $sysField), true);
+        $transaction = $this->beginTransaction($doc->getDocType(), $doc->getId());
 
-        $old   = json_decode($this->redis->hget($sysKey, $sysField), true);
-        $value = $this->getValue();
-
-        if ($value instanceof RelatedCollection) {
-        }
-
-        if (empty($old) === false) {
-            $this->redis->srem($this->keys->makeIndexKey($doc->getDocType(), $name, $old), $doc->getId());
+        if (empty($actual) === false) {
+            foreach ($actual as $value) {
+                $transaction->srem($this->keys->makeIndexKey($doc->getDocType(), $name, $value), $doc->getId());
+            }
         }
 
         if (empty($new) === false) {
-            $this->redis->sadd($this->keys->makeIndexKey($doc->getDocType(), $name, $new), [$doc->getId()]);
+            foreach ((array) $new as $value) {
+                $transaction->sadd($this->keys->makeIndexKey($doc->getDocType(), $name, $value), [$doc->getId()]);
+            }
+
+            $transaction->hset($sysKey, $sysField, json_encode($new));
+        } else {
+            $transaction->hdel($sysKey, [$sysField]);
         }
 
-        $this->redis->hset($sysKey, $sysField, $new);
+        try {
+            $transaction->execute();
+        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
+            $this->index($doc);
+        }
     }
 
     /**
@@ -103,12 +129,101 @@ abstract class ListIndex implements IndexInterface
         $name     = $this->getName();
         $sysKey   = $this->keys->makeIndexSysKey($doc->getDocType());
         $sysField = $this->getDocId() . ':' . $name;
-
-        $old = json_decode($this->redis->hget($sysKey, $sysField), true);
-
+        $this->redis->watch($this->keys->makeWatchingOnDocIndexKey($doc->getDocType(), $doc->getId(), $name));
+        $actual      = json_decode($this->redis->hget($sysKey, $sysField), true);
         $transaction = $this->beginTransaction($doc->getDocType(), $doc->getId());
 
+        if ($collection->isFlushed() === true) {
+            foreach ($actual as $value) {
+                $transaction->srem($this->keys->makeIndexKey($doc->getDocType(), $name, $value), $doc->getId());
+            }
 
+            $transaction->hdel($sysKey, [$sysField]);
+
+            $actual = [];
+        }
+
+        if (empty($actual) === false && empty($deleted = $collection->deleted()) === false) {
+            $deleted = array_map([$this, 'getStateValue'], $deleted);
+            $actual  = array_diff($actual, $deleted);
+
+            foreach ($deleted as $value) {
+                $transaction->srem($this->keys->makeIndexKey($doc->getDocType(), $name, $value), $doc->getId());
+            }
+
+            if (empty($actual) === false) {
+                $transaction->hset($sysKey, $sysField, json_encode($actual));
+            } else {
+                $transaction->hdel($sysKey, [$sysField]);
+            }
+        }
+
+        if (empty($added = array_diff($collection->added(), $actual)) === true) {
+            $added = array_map([$this, 'getStateValue'], $added);
+
+            foreach ($added as $value) {
+                $transaction->sadd(
+                    $this->keys->makeIndexKey($doc->getDocType(), $name, $value),
+                    [$doc->getId()]
+                );
+            }
+
+            $transaction->hset($sysKey, $sysField, json_encode(array_merge($actual, $added)));
+        }
+
+        try {
+            $transaction->execute();
+            $collection->reset();
+        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
+            $this->handleRelatedCollection($doc, $collection);
+        }
+    }
+
+    /**
+     * Handle related item
+     *
+     * @param DocumentInterface $doc  Document
+     * @param RelatedItem       $item Related item
+     *
+     * @return void
+     */
+    protected function handleRelatedItem(DocumentInterface $doc, RelatedItem $item) : void
+    {
+        $name     = $this->getName();
+        $sysKey   = $this->keys->makeIndexSysKey($doc->getDocType());
+        $sysField = $this->getDocId() . ':' . $name;
+        $this->redis->watch($this->keys->makeWatchingOnDocIndexKey($doc->getDocType(), $doc->getId(), $name));
+        $actual      = (array) json_decode($this->redis->hget($sysKey, $sysField), true);
+        $transaction = $this->beginTransaction($doc->getDocType(), $doc->getId());
+
+        foreach ($actual as $value) {
+            $transaction->srem($this->keys->makeIndexKey($doc->getDocType(), $name, $value), $doc->getId());
+        }
+
+        $transaction->sadd(
+            $this->keys->makeIndexKey($doc->getDocType(), $name, $this->getStateValue($item)),
+            [$doc->getId()]
+        );
+        $transaction->hset($sysKey, $sysField, json_encode($item));
+
+        try {
+            $transaction->execute();
+            $item->reset();
+        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
+            $this->handleRelatedItem($doc, $item);
+        }
+    }
+
+    /**
+     * Fetching value from state of changes like RelatedItem or RelatedCollection
+     *
+     * @param object|RelatedItem|RelatedCollection $item State of changes
+     *
+     * @return string
+     */
+    protected function getStateValue($item) : string
+    {
+        throw new \RuntimeException("Index %s doesn't have method getStateValue.", get_class($this));
     }
 
 }

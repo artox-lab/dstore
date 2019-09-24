@@ -9,25 +9,41 @@ use DStore\Tests\City;
 
 declare(strict_types=1);
 
-class CityListIndex
+class CityListIndex extends \DStore\Redis\Indexes\ListIndex
 {
     /**
      * @var \DStore\Tests\Place
      */
     protected $place;
 
-    public function index(\DStore\Tests\Place $place)
+    /**
+     * Name of index, use only letters in snake_case
+     *
+     * @return string
+     */
+    public function getName(): string
     {
-
+        return 'by_city_id';
     }
 
-    protected function values(\DStore\Tests\Place $place) : array
+    /**
+     * ID of document
+     *
+     * @return string
+     */
+    public function getDocId(): string
     {
-        return array_map(
-            function (City $city) : int {
-                return $city->id;
-            },
-            $this->place->cities
-        );
+        return (string) $this->place->id;
     }
+
+    /**
+     * Value for filtering documents
+     *
+     * @return string|array
+     */
+    public function getNewState()
+    {
+        return $this->place->cities;
+    }
+
 }

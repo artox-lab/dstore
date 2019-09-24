@@ -63,7 +63,8 @@ class RelatedCollection implements ArrayAccess
     }
 
     /**
-     * Flush all relations with entities
+     * Flush all relations with entities, use flush carefully, because race conditions can flush your state,
+     * after new items inserted
      *
      * @return void
      */
@@ -72,6 +73,16 @@ class RelatedCollection implements ArrayAccess
         $this->hasChanges = true;
         $this->isFlushed  = true;
         $this->elements   = [];
+    }
+
+    /**
+     * Is collection flushed
+     *
+     * @return bool
+     */
+    public function isFlushed() : bool
+    {
+        return $this->isFlushed;
     }
 
     /**
@@ -118,6 +129,19 @@ class RelatedCollection implements ArrayAccess
     public function deleted() : array
     {
         return $this->deleted;
+    }
+
+    /**
+     * Reset state of changes, use after saving state to store
+     *
+     * @return void
+     */
+    public function reset() : void
+    {
+        $this->hasChanges = false;
+        $this->isFlushed  = false;
+        $this->added      = [];
+        $this->deleted    = [];
     }
 
     /**

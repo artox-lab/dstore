@@ -31,7 +31,7 @@ interface IndexInterface
      *
      * @return string|array
      */
-    public function getValue();
+    public function getNewState();
 
     /**
      * Indexing of document

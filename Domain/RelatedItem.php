@@ -88,4 +88,15 @@ class RelatedItem
         return (bool) $this->isDeleted;
     }
 
+    /**
+     * Reset state of changes, use after saving state to store
+     *
+     * @return void
+     */
+    public function reset() : void
+    {
+        $this->isModified = false;
+        $this->isDeleted  = false;
+    }
+
 }
