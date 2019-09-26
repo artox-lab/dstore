@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace DStore\Redis\Indexes;
 
-
 use ArtoxLab\Domain\RelatedCollection;
 use ArtoxLab\Domain\RelatedItem;
+use RuntimeException as RuntimeException;
 
 class StateBuilder
 {
@@ -19,17 +19,38 @@ class StateBuilder
     /**
      * Building state
      *
-     * @param string        $state         New state
+     * @param mixed         $state         New state
      * @param callable|null $valueResolver Value resolver
      *
      * @return State
      */
     public function new($state, ?callable $valueResolver = null) : State
     {
-        if ($state instanceof RelatedItem) {
-            return new State([$valueResolver($state->get())], [], true);
+        if (is_object($state) === true) {
+            if (empty($valueResolver) === true) {
+                throw new RuntimeException("Value resolver is required for objects.");
+            }
+
+            return $this->stateFromObject($state, $valueResolver);
         }
 
+        if (is_array($state) === true) {
+            return $this->stateFromArray($state, $valueResolver);
+        }
+
+        return new State([(string) $state], [], true);
+    }
+
+    /**
+     * Make state from object
+     *
+     * @param object|RelatedItem|RelatedCollection $state         Updated state of document
+     * @param callable                             $valueResolver Value resolver
+     *
+     * @return State
+     */
+    protected function stateFromObject($state, callable $valueResolver) : State
+    {
         if ($state instanceof RelatedCollection) {
             return new State(
                 array_map($valueResolver, $state->getAddedItems()),
@@ -38,7 +59,38 @@ class StateBuilder
             );
         }
 
-        return new State([(string) $state], [], true);
+        if ($state instanceof RelatedItem && $state->isModified() === false) {
+            return new State([], [], false);
+        }
+
+        return new State([$valueResolver($state)], [], true);
+    }
+
+    /**
+     * Make state from array (always rewrite old state to new state)
+     *
+     * @param array         $state         New state
+     * @param callable|null $valueResolver Value resolver (for array of arrays or array of objects)
+     *
+     * @return State
+     */
+    protected function stateFromArray(array $state, ?callable $valueResolver) : State
+    {
+        $added = [];
+
+        if (empty($state) === false) {
+            $tmp = current($state);
+
+            if (is_array($tmp) === true || is_object($tmp) === true) {
+                if (empty($valueResolver) === true) {
+                    throw new RuntimeException("Value resolver is required for objects.");
+                }
+
+                $added = array_map($valueResolver, $state);
+            }
+        }
+
+        return new State($added, [], true);
     }
 
 }

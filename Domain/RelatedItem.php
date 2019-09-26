@@ -74,8 +74,9 @@ class RelatedItem
      */
     public function delete() : void
     {
-        $this->entity    = null;
-        $this->isDeleted = true;
+        $this->entity     = null;
+        $this->isDeleted  = true;
+        $this->isModified = true;
     }
 
     /**
