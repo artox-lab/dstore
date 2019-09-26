@@ -5,6 +5,7 @@
  * @author Artur Turchin <a.turchin@artox.com>
  */
 
+use DStore\Interfaces\DocumentInterface;
 use DStore\Tests\City;
 
 declare(strict_types=1);
@@ -27,24 +28,16 @@ class CityListIndex extends \DStore\Redis\Indexes\ListIndex
     }
 
     /**
-     * ID of document
-     *
-     * @return string
-     */
-    public function getDocId(): string
-    {
-        return (string) $this->place->id;
-    }
-
-    /**
      * Value for filtering documents
+     *
+     * @param PlaceDoc|DocumentInterface $doc Document
      *
      * @return string|array
      */
-    public function getNewState()
+    public function getNewState(DocumentInterface $doc)
     {
         return $this->state->new(
-            $this->place->cities,
+            $doc->place->cities,
             function (City $city) : string {
                 return (string) $city->id;
             }

@@ -10,7 +10,7 @@ use DStore\Tests\Sort;
 
 declare(strict_types=1);
 
-class PlaceDoc
+class PlaceDoc implements \DStore\Interfaces\DocumentInterface
 {
     /**
      * @var \DStore\Tests\Place
@@ -62,4 +62,33 @@ class PlaceDoc
         ];
     }
 
+    /**
+     * Getting doc type
+     *
+     * @return string
+     */
+    public function getDocType(): string
+    {
+        // TODO: Implement getDocType() method.
+    }
+
+    /**
+     * Identifier of document
+     *
+     * @return string
+     */
+    public function getId(): string
+    {
+        // TODO: Implement getId() method.
+    }
+
+    /**
+     * Refs on results of intersection existing indexes (like cache)
+     *
+     * @return array
+     */
+    public function indexRefs(): array
+    {
+        // TODO: Implement indexRefs() method.
+    }
 }

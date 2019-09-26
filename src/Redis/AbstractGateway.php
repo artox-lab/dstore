@@ -47,32 +47,31 @@ abstract class AbstractGateway implements GatewayInterface
     }
 
     /**
-     * Persists document to store
+     * Persists document to store with their indexes and refs
      *
      * @param DocumentInterface $doc Document
      *
      * @return void
      */
-    public function persist(DocumentInterface $doc) : void
+    protected function persist(DocumentInterface $doc) : void
     {
-        $this->watchOnDocumentChanges($doc);
+        $this->createOrUpdateDoc($doc);
+        $this->persistIndexes();
+        $this->persistRefs();
+    }
 
-        $actual = json_decode($this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getId()), true);
-        $new    = $doc->attributes();
-
-        if ($actual === $new) {
-            $this->redis->unwatch();
-            return;
-        }
-
-        $transaction = $this->beginTransaction($doc);
-        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getId(), json_encode($actual, $new));
-
-        try {
-            $transaction->execute();
-        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
-            $this->persist($doc);
-        }
+    /**
+     * Flush doc, their indexes and relations
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    protected function flush(DocumentInterface $doc) : void
+    {
+        $this->deleteIndexes();
+        $this->deleteRefs();
+        $this->deleteDoc($doc);
     }
 
     /**
@@ -130,6 +129,56 @@ abstract class AbstractGateway implements GatewayInterface
                 $results
             )
         );
+    }
+
+    /**
+     * Create or update document in hash table
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    private function createOrUpdateDoc(DocumentInterface $doc) : void
+    {
+        $this->watchOnDocumentChanges($doc);
+
+        $actual = json_decode($this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getId()), true);
+        $new    = $doc->attributes();
+
+        if ($actual === $new) {
+            $this->redis->unwatch();
+            return;
+        }
+
+        $transaction = $this->beginTransaction($doc);
+        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getId(), json_encode($actual, $new));
+
+        try {
+            $transaction->execute();
+        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
+            $this->createOrUpdateDoc($doc);
+        }
+    }
+
+    /**
+     * Removing document from hash table
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    private function deleteDoc(DocumentInterface $doc) : void
+    {
+        $this->watchOnDocumentChanges($doc);
+
+        $transaction = $this->beginTransaction($doc);
+        $transaction->hdel($this->keys->makeKey($doc->getDocType()), [$doc->getId()]);
+
+        try {
+            $transaction->execute();
+        } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
+            $this->deleteDoc($doc);
+        }
     }
 
 }

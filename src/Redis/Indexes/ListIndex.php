@@ -56,7 +56,7 @@ abstract class ListIndex implements IndexInterface
         $dto->docType = $doc->getDocType();
         $dto->docId   = $doc->getId();
 
-        $this->index->build($dto, $this->getNewState());
+        $this->index->build($dto, $this->getNewState($doc));
     }
 
     /**

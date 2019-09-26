@@ -22,18 +22,13 @@ interface IndexInterface
     public function getName() : string ;
 
     /**
-     * ID of document
-     *
-     * @return string
-     */
-    public function getDocId() : string ;
-
-    /**
      * Value for filtering documents
+     *
+     * @param DocumentInterface $doc Document
      *
      * @return string|array|State
      */
-    public function getNewState();
+    public function getNewState(DocumentInterface $doc);
 
     /**
      * Indexing of document
