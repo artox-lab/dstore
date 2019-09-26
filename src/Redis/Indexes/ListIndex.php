@@ -13,8 +13,6 @@ use DStore\Interfaces\DocumentInterface;
 use DStore\Interfaces\IndexInterface;
 use DStore\Redis\Indexes\Builders\ListBuilder;
 use DStore\Redis\Indexes\Builders\ListDto;
-use DStore\Redis\KeysResolver;
-use Predis\Client;
 
 abstract class ListIndex implements IndexInterface
 {
@@ -59,6 +57,23 @@ abstract class ListIndex implements IndexInterface
         $dto->docId   = $doc->getId();
 
         $this->index->build($dto, $this->getNewState());
+    }
+
+    /**
+     * Flush index of document
+     *
+     * @param DocumentInterface $doc Документ
+     *
+     * @return void
+     */
+    public function flush(DocumentInterface $doc) : void
+    {
+        $dto          = new ListDto();
+        $dto->name    = $this->getName();
+        $dto->docType = $doc->getDocType();
+        $dto->docId   = $doc->getId();
+
+        $this->index->build($dto, new State([], [], true));
     }
 
 }

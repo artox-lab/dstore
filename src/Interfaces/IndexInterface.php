@@ -44,4 +44,13 @@ interface IndexInterface
      */
     public function index(DocumentInterface $doc) : void;
 
+    /**
+     * Flush index of document
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    public function flush(DocumentInterface $doc) : void;
+
 }
