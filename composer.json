@@ -4,7 +4,8 @@
     "type": "library",
     "require": {
         "predis/predis": "^2.0@dev",
-        "ext-json": "*"
+        "ext-json": "*",
+        "artox-lab/entities": "^1.0.0"
     },
     "license": "MIT",
     "authors": [

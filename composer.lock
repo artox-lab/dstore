@@ -4,8 +4,41 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "969dd1708e675beefa7ef7e5ee59fc7d",
+    "content-hash": "9c983a91b0672986849ef8a2d8d88235",
     "packages": [
+        {
+            "name": "artox-lab/entities",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artox-lab/entities.git",
+                "reference": "0973ca26a62a11f6bde835765735b3328b091091"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artox-lab/entities/zipball/0973ca26a62a11f6bde835765735b3328b091091",
+                "reference": "0973ca26a62a11f6bde835765735b3328b091091",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ArtoxLab\\Entities\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artur Turchin",
+                    "email": "a.turchin@artox.com"
+                }
+            ],
+            "description": "Abstracts for Entities layer in Clean Architecture",
+            "time": "2019-10-28T14:30:00+00:00"
+        },
         {
             "name": "predis/predis",
             "version": "dev-master",
@@ -70,6 +103,8 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": []
 }
