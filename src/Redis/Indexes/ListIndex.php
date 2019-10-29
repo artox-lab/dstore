@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis\Indexes;
+namespace ArtoxLab\DStore\Redis\Indexes;
 
-use DStore\Interfaces\DocumentInterface;
-use DStore\Interfaces\IndexInterface;
-use DStore\Redis\Indexes\Builders\ListBuilder;
-use DStore\Redis\Indexes\Builders\ListDto;
+use ArtoxLab\DStore\Interfaces\DocumentInterface;
+use ArtoxLab\DStore\Interfaces\IndexInterface;
+use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
+use ArtoxLab\DStore\Redis\Indexes\Builders\ListDto;
 
 abstract class ListIndex implements IndexInterface
 {

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis\Indexes\Builders;
+namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
 class ListDto
 {

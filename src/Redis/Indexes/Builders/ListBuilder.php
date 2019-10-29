@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis\Indexes\Builders;
+namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
-use DStore\Redis\Indexes\State;
-use DStore\Redis\KeysResolver;
+use ArtoxLab\DStore\Redis\Indexes\State;
+use ArtoxLab\DStore\Redis\KeysResolver;
 use Predis\Client;
 use Predis\ClientInterface;
 use Predis\CommunicationException;

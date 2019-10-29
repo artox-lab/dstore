@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis;
+namespace ArtoxLab\DStore\Redis;
 
-use DStore\Interfaces\DocumentInterface;
-use DStore\Interfaces\GatewayInterface;
+use ArtoxLab\DStore\Interfaces\DocumentInterface;
+use ArtoxLab\DStore\Interfaces\GatewayInterface;
 use Predis\Client;
 use Predis\ClientInterface;
 use Predis\CommunicationException;

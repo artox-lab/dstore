@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis\Relations;
+namespace ArtoxLab\DStore\Redis\Relations;
 
 class HashRelation
 {

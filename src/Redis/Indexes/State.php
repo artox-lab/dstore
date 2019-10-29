@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace DStore\Redis\Indexes;
+namespace ArtoxLab\DStore\Redis\Indexes;
 
 use ArtoxLab\Entities\RelatedCollection;
 use ArtoxLab\Entities\RelatedItem;

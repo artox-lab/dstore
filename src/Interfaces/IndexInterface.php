@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace DStore\Interfaces;
+namespace ArtoxLab\DStore\Interfaces;
 
-use DStore\Redis\Indexes\State;
+use ArtoxLab\DStore\Redis\Indexes\State;
 
 interface IndexInterface
 {
