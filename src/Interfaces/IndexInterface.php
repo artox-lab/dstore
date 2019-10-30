@@ -22,13 +22,13 @@ interface IndexInterface
     public function getName() : string ;
 
     /**
-     * Value for filtering documents
+     * State of value for filtering documents
      *
      * @param DocumentInterface $doc Document
      *
      * @return string|array|State
      */
-    public function getNewState(DocumentInterface $doc);
+    public function getState(DocumentInterface $doc);
 
     /**
      * Indexing of document

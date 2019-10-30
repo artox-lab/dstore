@@ -13,6 +13,8 @@ use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListDto;
+use ArtoxLab\DStore\Redis\KeysResolver;
+use Predis\ClientInterface;
 
 abstract class ListIndex implements IndexInterface
 {
@@ -33,13 +35,13 @@ abstract class ListIndex implements IndexInterface
     /**
      * ListIndex constructor.
      *
-     * @param StateBuilder $state State builder
-     * @param ListBuilder  $index List index builder
+     * @param ClientInterface $redis Redis
+     * @param KeysResolver    $keys  Registry of keys
      */
-    public function __construct(StateBuilder $state, ListBuilder $index)
+    public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
-        $this->state = $state;
-        $this->index = $index;
+        $this->state = new StateBuilder();
+        $this->index = new ListBuilder($redis, $keys);
     }
 
     /**
@@ -54,9 +56,9 @@ abstract class ListIndex implements IndexInterface
         $dto          = new ListDto();
         $dto->name    = $this->getName();
         $dto->docType = $doc->getDocType();
-        $dto->docId   = $doc->getId();
+        $dto->docId   = $doc->getDocId();
 
-        $this->index->build($dto, $this->getNewState($doc));
+        $this->index->build($dto, $this->getState($doc));
     }
 
     /**
@@ -71,7 +73,7 @@ abstract class ListIndex implements IndexInterface
         $dto          = new ListDto();
         $dto->name    = $this->getName();
         $dto->docType = $doc->getDocType();
-        $dto->docId   = $doc->getId();
+        $dto->docId   = $doc->getDocId();
 
         $this->index->build($dto, new State([], [], true));
     }

@@ -27,10 +27,6 @@ class StateBuilder
     public function new($state, ?callable $valueResolver = null) : State
     {
         if (is_object($state) === true) {
-            if (empty($valueResolver) === true) {
-                throw new RuntimeException("Value resolver is required for objects.");
-            }
-
             return $this->stateFromObject($state, $valueResolver);
         }
 
@@ -51,6 +47,10 @@ class StateBuilder
      */
     protected function stateFromObject($state, callable $valueResolver) : State
     {
+        if (empty($valueResolver) === true) {
+            throw new RuntimeException("Value resolver is required for objects.");
+        }
+
         if ($state instanceof RelatedCollection) {
             return new State(
                 array_map($valueResolver, $state->getAddedItems()),

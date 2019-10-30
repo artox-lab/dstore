@@ -17,7 +17,11 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "ArtoxLab\\DStore\\": "src/"
-        }
+            "ArtoxLab\\DStore\\": "src/",
+            "ArtoxLab\\DStore\\Tests\\": "Tests/"
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     }
 }

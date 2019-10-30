@@ -9,25 +9,25 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Interfaces;
 
-interface GatewayInterface
+interface PersistGatewayInterface
 {
 
     /**
-     * Create or update (if it exists) document
+     * Create or update (if it exists) entity
      *
-     * @param mixed $dto DTO
+     * @param mixed $entity Entity
      *
-     * @return mixed
+     * @return void
      */
-    public function createOrUpdate($dto);
+    public function createOrUpdate($entity) : void;
 
     /**
      * Deleting document
      *
-     * @param mixed $dto DTO
+     * @param mixed $entity Entity
      *
      * @return void
      */
-    public function delete($dto) : void;
+    public function delete($entity) : void;
 
 }
