@@ -63,7 +63,7 @@ class StateBuilder
             return new State([], [], false);
         }
 
-        return new State([$valueResolver($state)], [], true);
+        return new State([$valueResolver($state->get())], [], true);
     }
 
     /**

@@ -116,16 +116,18 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     {
         $this->watchOnDocumentChanges($doc);
 
-        $actual = json_decode($this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getDocId()), true);
-        $new    = $doc->getDocAttributes();
+        $existedData = (string) $this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getDocId());
+        $existedData = (array) json_decode($existedData, true);
+        $newData     = $doc->getDocAttributes();
 
-        if ($actual === $new) {
+        if (empty($existedData) === false && $existedData === $newData) {
             $this->redis->unwatch();
             return;
         }
 
+        $actualData  = array_merge($existedData, $newData);
         $transaction = $this->beginTransaction($doc);
-        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getDocId(), json_encode($actual, $new));
+        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getDocId(), json_encode($actualData));
 
         try {
             $transaction->execute();
@@ -177,6 +179,26 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     }
 
     /**
+     * TODO: Realize this method later or set abstract
+     *
+     * @return void
+     */
+    private function persistRefs(): void
+    {
+
+    }
+
+    /**
+     * TODO: Realize this method later or set abstract
+     *
+     * @return void
+     */
+    private function deleteRefs(): void
+    {
+
+    }
+
+    /**
      * Persisting indexes of document
      *
      * @param DocumentInterface $doc Document
@@ -216,5 +238,7 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
 
         return new $class($this->redis, $this->keys);
     }
+
+
 
 }
