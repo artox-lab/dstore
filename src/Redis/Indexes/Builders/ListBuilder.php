@@ -114,7 +114,7 @@ class ListBuilder
      */
     protected function getSysField(ListDto $dto) : string
     {
-        return ($dto->docId . ':' . $dto->name);
+        return $this->keys->makeSysField($dto->docId, $dto->docType);
     }
 
     /**

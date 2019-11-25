@@ -70,6 +70,19 @@ class KeysResolver
     }
 
     /**
+     * Make field of hash where we stored actual state
+     *
+     * @param string $index   Index name
+     * @param string $docType Type of document
+     *
+     * @return string
+     */
+    public function makeSysField(string $index, string $docType): string
+    {
+        return sprintf('%s:%s', $index, $docType);
+    }
+
+    /**
      * Make key of watching changes on document index
      *
      * @param string $docType Type of document
