@@ -12,8 +12,6 @@ namespace ArtoxLab\DStore\Tests\Domain\Store\Documents;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Tests\Domain\Entities\Brand as BrandEntity;
 use ArtoxLab\DStore\Tests\Domain\Entities\Product as ProductEntity;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product\IndexByBrandId;
-use ArtoxLab\Entities\RelatedItem;
 
 class Brand implements DocumentInterface
 {

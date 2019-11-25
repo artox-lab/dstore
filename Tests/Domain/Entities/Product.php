@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace ArtoxLab\DStore\Tests\Domain\Entities;
 
 use ArtoxLab\Entities\Entity;
-use ArtoxLab\Entities\RelatedCollection;
-use ArtoxLab\Entities\RelatedItem;
+use ArtoxLab\Entities\States\State as StateInterface;
+use ArtoxLab\Entities\States\StateItem;
 
 class Product implements Entity
 {
@@ -32,7 +32,7 @@ class Product implements Entity
     /**
      * Brand of product
      *
-     * @var RelatedItem|null
+     * @var StateItem|null
      */
     protected $brand;
 
@@ -47,7 +47,7 @@ class Product implements Entity
         $this->id    = $id;
         $this->title = $title;
 
-        $this->brand = new RelatedItem(null);
+        $this->brand = new StateItem(null);
     }
 
     /**
@@ -95,12 +95,12 @@ class Product implements Entity
     /**
      * Setting state of reference
      *
-     * @param string                        $name  Name of reference
-     * @param RelatedItem|RelatedCollection $state State
+     * @param string         $name  Name of reference
+     * @param StateInterface $state State
      *
      * @return void
      */
-    public function setReferenceState(string $name, $state)
+    public function setReferenceState(string $name, StateInterface $state): void
     {
         if (property_exists($this, $name) === false) {
             throw new \RuntimeException(sprintf('Invalid name of reference %s', $name));
@@ -114,9 +114,9 @@ class Product implements Entity
      *
      * @param string $name Name of reference
      *
-     * @return mixed
+     * @return StateInterface
      */
-    public function getReferenceState(string $name)
+    public function getReferenceState(string $name): StateInterface
     {
         if (property_exists($this, $name) === false) {
             throw new \RuntimeException(sprintf('Invalid name of reference %s', $name));

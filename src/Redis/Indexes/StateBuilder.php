@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes;
 
-use ArtoxLab\Entities\RelatedCollection;
-use ArtoxLab\Entities\RelatedItem;
-use RuntimeException as RuntimeException;
+use ArtoxLab\Entities\States\StateCollection;
+use ArtoxLab\Entities\States\StateItem;
+use ArtoxLab\Entities\States\State as StateInterface;
 
 class StateBuilder
 {
@@ -40,18 +40,18 @@ class StateBuilder
     /**
      * Make state from object
      *
-     * @param object|RelatedItem|RelatedCollection $state         Updated state of document
-     * @param callable                             $valueResolver Value resolver
+     * @param StateInterface $state         Updated state of document
+     * @param callable       $valueResolver Value resolver
      *
      * @return State
      */
-    protected function stateFromObject($state, callable $valueResolver) : State
+    protected function stateFromObject(StateInterface $state, callable $valueResolver) : State
     {
         if (empty($valueResolver) === true) {
-            throw new RuntimeException("Value resolver is required for objects.");
+            throw new \RuntimeException('Value resolver is required for objects.');
         }
 
-        if ($state instanceof RelatedCollection) {
+        if ($state instanceof StateCollection) {
             return new State(
                 array_map($valueResolver, $state->getAddedItems()),
                 array_map($valueResolver, $state->getDeletedItems()),
@@ -59,7 +59,7 @@ class StateBuilder
             );
         }
 
-        if ($state instanceof RelatedItem && $state->isModified() === false) {
+        if ($state instanceof StateItem && $state->isModified() === false) {
             return new State([], [], false);
         }
 
@@ -83,7 +83,7 @@ class StateBuilder
 
             if (is_array($tmp) === true || is_object($tmp) === true) {
                 if (empty($valueResolver) === true) {
-                    throw new RuntimeException("Value resolver is required for objects.");
+                    throw new \RuntimeException('Value resolver is required for objects.');
                 }
 
                 $added = array_map($valueResolver, $state);

@@ -5,7 +5,7 @@
     "require": {
         "predis/predis": "^2.0@dev",
         "ext-json": "*",
-        "artox-lab/entities": "^1.0.0"
+        "artox-lab/entities": "dev-master"
     },
     "license": "MIT",
     "authors": [

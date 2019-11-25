@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c983a91b0672986849ef8a2d8d88235",
+    "content-hash": "512ae87d41c639478d3ca860a2b80d0c",
     "packages": [
         {
             "name": "artox-lab/entities",
-            "version": "v1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artox-lab/entities.git",
-                "reference": "0973ca26a62a11f6bde835765735b3328b091091"
+                "reference": "179171d31955151f04d2b68f3ca5a45979537684"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artox-lab/entities/zipball/0973ca26a62a11f6bde835765735b3328b091091",
-                "reference": "0973ca26a62a11f6bde835765735b3328b091091",
+                "url": "https://api.github.com/repos/artox-lab/entities/zipball/179171d31955151f04d2b68f3ca5a45979537684",
+                "reference": "179171d31955151f04d2b68f3ca5a45979537684",
                 "shasum": ""
             },
             "type": "library",
@@ -37,7 +37,7 @@
                 }
             ],
             "description": "Abstracts for Entities layer in Clean Architecture",
-            "time": "2019-10-28T14:30:00+00:00"
+            "time": "2019-11-22T08:14:03+00:00"
         },
         {
             "name": "predis/predis",
@@ -99,7 +99,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "predis/predis": 20
+        "predis/predis": 20,
+        "artox-lab/entities": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

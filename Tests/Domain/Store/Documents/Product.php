@@ -1,6 +1,6 @@
 <?php
 /**
- * todo: comment
+ * Document of product
  *
  * @author Artur Turchin <a.turchin@artox.com>
  */
@@ -13,7 +13,7 @@ namespace ArtoxLab\DStore\Tests\Domain\Store\Documents;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Tests\Domain\Entities\Product as ProductEntity;
 use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product\IndexByBrandId;
-use ArtoxLab\Entities\RelatedItem;
+use ArtoxLab\Entities\States\StateItem;
 
 class Product implements DocumentInterface
 {
@@ -90,9 +90,9 @@ class Product implements DocumentInterface
     /**
      * Getting brand state
      *
-     * @return RelatedItem
+     * @return StateItem
      */
-    public function getBrandState() : RelatedItem
+    public function getBrandState() : StateItem
     {
         return $this->product->getReferenceState('brand');
     }

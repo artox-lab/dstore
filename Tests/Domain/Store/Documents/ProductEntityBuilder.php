@@ -11,7 +11,7 @@ namespace ArtoxLab\DStore\Tests\Domain\Store\Documents;
 
 use ArtoxLab\DStore\Tests\Domain\Entities\Brand;
 use ArtoxLab\DStore\Tests\Domain\Entities\Product as ProductEntity;
-use ArtoxLab\Entities\RelatedItem;
+use ArtoxLab\Entities\States\StateItem;
 
 class ProductEntityBuilder
 {
@@ -51,7 +51,7 @@ class ProductEntityBuilder
             return;
         }
 
-        $this->product->setReferenceState('brand', new RelatedItem($brand));
+        $this->product->setReferenceState('brand', new StateItem($brand));
     }
 
     /**
