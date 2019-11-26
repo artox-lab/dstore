@@ -37,6 +37,13 @@ class Product implements Entity
     protected $brand;
 
     /**
+     * BrandScore of product
+     *
+     * @var StateItem|null
+     */
+    protected $brandScore;
+
+    /**
      * Product constructor.
      *
      * @param int    $id    ID

@@ -97,4 +97,14 @@ class Product implements DocumentInterface
         return $this->product->getReferenceState('brand');
     }
 
+    /**
+     * Getting brand score state
+     *
+     * @return StateItem
+     */
+    public function getBrandScoreState() : StateItem
+    {
+        return $this->product->getReferenceState('brandScore');
+    }
+
 }

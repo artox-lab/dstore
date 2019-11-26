@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace ArtoxLab\DStore\Tests\Domain\Store\Documents;
 
 use ArtoxLab\DStore\Tests\Domain\Entities\Brand;
+use ArtoxLab\DStore\Tests\Domain\Entities\BrandScore;
 use ArtoxLab\DStore\Tests\Domain\Entities\Product as ProductEntity;
 use ArtoxLab\Entities\States\StateItem;
 
@@ -52,6 +53,22 @@ class ProductEntityBuilder
         }
 
         $this->product->setReferenceState('brand', new StateItem($brand));
+    }
+
+    /**
+     * Add entity of brandScore to product
+     *
+     * @param BrandScore|null $brandScore BrandScore
+     *
+     * @return void
+     */
+    public function changeBrandSort(?BrandScore $brandScore) : void
+    {
+        if (empty($this->product) === true || empty($brandScore) === true) {
+            return;
+        }
+
+        $this->product->setReferenceState('brandScore', new StateItem($brandScore));
     }
 
     /**
