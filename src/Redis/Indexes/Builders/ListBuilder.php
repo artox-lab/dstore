@@ -39,7 +39,7 @@ class ListBuilder extends AbstractListBuilder
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
         }
 
-        $transaction->hdel($this->getSysKey($dto), [$this->getSysField($dto)]);
+        $transaction->hdel($this->getSysHashKey($dto), [$this->getSysField($dto)]);
 
         try {
             $transaction->execute();
@@ -79,9 +79,9 @@ class ListBuilder extends AbstractListBuilder
         $actual = array_diff($actual, $items);
 
         if (empty($actual) === false) {
-            $transaction->hset($this->getSysKey($dto), $this->getSysField($dto), json_encode($actual));
+            $transaction->hset($this->getSysHashKey($dto), $this->getSysField($dto), json_encode($actual));
         } else {
-            $transaction->hdel($this->getSysKey($dto), [$this->getSysField($dto)]);
+            $transaction->hdel($this->getSysHashKey($dto), [$this->getSysField($dto)]);
         }
 
         try {
@@ -120,7 +120,7 @@ class ListBuilder extends AbstractListBuilder
         }
 
         $transaction->hset(
-            $this->getSysKey($dto),
+            $this->getSysHashKey($dto),
             $this->getSysField($dto),
             json_encode(array_merge($actual, $items))
         );
