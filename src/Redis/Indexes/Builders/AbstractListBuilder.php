@@ -127,7 +127,7 @@ abstract class AbstractListBuilder
     protected function getSysKey(ListDto $dto) : string
     {
 
-        return $this->keys->makeIndexSysKey($dto->docType);
+        return $this->keys->makeIndexSysKey($dto->docType, $dto->docId);
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class AbstractListBuilder
      */
     protected function getSysHashKey(ListDto $dto) : string
     {
-        return $this->keys->makeIndexSysHashKey($dto->docType, $dto->docId);
+        return $this->keys->makeIndexSysHashKey($dto->docType);
     }
 
     /**
@@ -155,13 +155,25 @@ abstract class AbstractListBuilder
     }
 
     /**
-     * Getting actual state
+     * Get actual state from the set
      *
      * @param ListDto $dto List dto
      *
      * @return array
      */
-    protected function getActualState(ListDto $dto) : array
+    protected function getActualState(ListDto $dto): array
+    {
+        return $this->redis->smembers($this->getSysKey($dto));
+    }
+
+    /**
+     * Get actual state from hash
+     *
+     * @param ListDto $dto List dto
+     *
+     * @return array
+     */
+    protected function getActualStateFromHash(ListDto $dto) : array
     {
         $data = $this->redis->hget($this->getSysHashKey($dto), $this->getSysField($dto));
 

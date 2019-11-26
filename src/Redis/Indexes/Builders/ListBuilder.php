@@ -32,7 +32,7 @@ class ListBuilder extends AbstractListBuilder
     {
         $this->watch($dto);
 
-        $actual      = $this->getActualState($dto);
+        $actual      = $this->getActualStateFromHash($dto);
         $transaction = $this->beginTransaction($dto);
 
         foreach ($actual as $value) {
@@ -64,7 +64,7 @@ class ListBuilder extends AbstractListBuilder
 
         $this->watch($dto);
 
-        $actual = $this->getActualState($dto);
+        $actual = $this->getActualStateFromHash($dto);
 
         if (empty($actual) === true) {
             return;
@@ -107,7 +107,7 @@ class ListBuilder extends AbstractListBuilder
 
         $this->watch($dto);
 
-        $actual      = $this->getActualState($dto);
+        $actual      = $this->getActualStateFromHash($dto);
         $transaction = $this->beginTransaction($dto);
 
         $items = array_diff($items, $actual);
