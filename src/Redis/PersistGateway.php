@@ -239,6 +239,4 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
         return new $class($this->redis, $this->keys);
     }
 
-
-
 }
