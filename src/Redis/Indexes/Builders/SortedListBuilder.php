@@ -1,6 +1,6 @@
 <?php
 /**
- * Index of sorted list builder
+ * Sorted index: one doc linked to other documents
  *
  * @author Denis Ptushko <d.ptushko@artox.com>
  */
@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
-use ArtoxLab\DStore\Redis\Indexes\Values\ScoredValue;
+use ArtoxLab\DStore\Redis\Indexes\Values\SortedIndexValue;
 use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
@@ -26,13 +26,12 @@ class SortedListBuilder extends AbstractListBuilder
      */
     protected function flush(ListDto $dto) : void
     {
-
         $actual      = $this->getActualState($dto);
         $transaction = $this->beginTransaction($dto);
 
         foreach ($actual as $value) {
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), $value);
+            $transaction->del($this->getSysKey($dto));
         }
 
         try {
@@ -45,8 +44,8 @@ class SortedListBuilder extends AbstractListBuilder
     /**
      * Deleting some items from list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Deleted items
+     * @param ListDto            $dto   List dto
+     * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */
@@ -59,8 +58,8 @@ class SortedListBuilder extends AbstractListBuilder
         $transaction = $this->beginTransaction($dto);
 
         foreach ($items as $item) {
-            $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), $item);
+            $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()), $dto->docId);
+            $transaction->del($this->getSysKey($dto));
         }
 
         try {
@@ -73,8 +72,8 @@ class SortedListBuilder extends AbstractListBuilder
     /**
      * Adding some items to sorted list
      *
-     * @param ListDto       $dto   List dto
-     * @param ScoredValue[] $items Added items
+     * @param ListDto            $dto   List dto
+     * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */

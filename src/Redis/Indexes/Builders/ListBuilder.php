@@ -9,14 +9,9 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
-use ArtoxLab\DStore\Redis\Indexes\State;
-use ArtoxLab\DStore\Redis\KeysResolver;
-use Predis\Client;
-use Predis\ClientInterface;
 use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
-use Predis\Transaction\MultiExec;
 
 class ListBuilder extends AbstractListBuilder
 {
@@ -35,7 +30,7 @@ class ListBuilder extends AbstractListBuilder
 
         foreach ($actual as $value) {
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), $value);
+            $transaction->del($this->getSysKey($dto));
         }
 
         try {
@@ -63,7 +58,7 @@ class ListBuilder extends AbstractListBuilder
 
         foreach ($items as $item) {
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $item), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), $item);
+            $transaction->del($this->getSysKey($dto));
         }
 
         try {
