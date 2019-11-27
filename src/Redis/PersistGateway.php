@@ -31,7 +31,7 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     {
         $this->createOrUpdateDoc($doc);
         $this->persistIndexes($doc);
-        $this->persistRefs();
+        // $this->persistRefs();
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     protected function flush(DocumentInterface $doc) : void
     {
         $this->deleteIndexes($doc);
-        $this->deleteRefs();
+        // $this->deleteRefs();
         $this->deleteDoc($doc);
     }
 
@@ -176,26 +176,6 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
             $index = $this->makeIndexByClassName($class);
             $index->index($doc);
         }
-    }
-
-    /**
-     * TODO: Realize this method later or set abstract
-     *
-     * @return void
-     */
-    private function persistRefs(): void
-    {
-
-    }
-
-    /**
-     * TODO: Realize this method later or set abstract
-     *
-     * @return void
-     */
-    private function deleteRefs(): void
-    {
-
     }
 
     /**

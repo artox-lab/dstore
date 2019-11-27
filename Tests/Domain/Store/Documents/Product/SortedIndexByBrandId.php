@@ -12,7 +12,7 @@ namespace ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Redis\Indexes\SortedListIndex;
 use ArtoxLab\DStore\Redis\Indexes\State;
-use ArtoxLab\DStore\Redis\Indexes\Values\ScoredValue;
+use ArtoxLab\DStore\Redis\Indexes\Values\SortedIndexValue;
 use ArtoxLab\DStore\Tests\Domain\Entities\BrandScore;
 use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
 
@@ -41,8 +41,11 @@ class SortedIndexByBrandId extends SortedListIndex
         $brandScore = $doc->getBrandScoreState();
         return $this->state->new(
             $brandScore,
-            function (BrandScore $brandScore) : ScoredValue {
-                return new ScoredValue($brandScore->getScore(), $brandScore->getBrand()->getId());
+            function (BrandScore $score) : SortedIndexValue {
+                $siValue = new SortedIndexValue();
+                $siValue->setScore($score->getScore());
+                $siValue->setParam($score->getBrand()->getId());
+                return $siValue;
             }
         );
     }
