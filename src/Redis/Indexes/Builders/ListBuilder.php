@@ -30,16 +30,13 @@ class ListBuilder extends AbstractListBuilder
      */
     protected function flush(ListDto $dto) : void
     {
-        $this->watch($dto);
-
-        $actual      = $this->getActualStateFromHash($dto);
+        $actual      = $this->getActualState($dto);
         $transaction = $this->beginTransaction($dto);
 
         foreach ($actual as $value) {
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
+            $transaction->srem($this->getSysKey($dto), $value);
         }
-
-        $transaction->hdel($this->getSysHashKey($dto), [$this->getSysField($dto)]);
 
         try {
             $transaction->execute();
@@ -62,26 +59,11 @@ class ListBuilder extends AbstractListBuilder
             return;
         }
 
-        $this->watch($dto);
-
-        $actual = $this->getActualStateFromHash($dto);
-
-        if (empty($actual) === true) {
-            return;
-        }
-
         $transaction = $this->beginTransaction($dto);
 
         foreach ($items as $item) {
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $item), $dto->docId);
-        }
-
-        $actual = array_diff($actual, $items);
-
-        if (empty($actual) === false) {
-            $transaction->hset($this->getSysHashKey($dto), $this->getSysField($dto), json_encode($actual));
-        } else {
-            $transaction->hdel($this->getSysHashKey($dto), [$this->getSysField($dto)]);
+            $transaction->srem($this->getSysKey($dto), $item);
         }
 
         try {
@@ -105,25 +87,16 @@ class ListBuilder extends AbstractListBuilder
             return;
         }
 
-        $this->watch($dto);
-
-        $actual      = $this->getActualStateFromHash($dto);
         $transaction = $this->beginTransaction($dto);
-
-        $items = array_diff($items, $actual);
 
         foreach ($items as $item) {
             $transaction->sadd(
                 $this->keys->makeIndexKey($dto->docType, $dto->name, $item),
                 [$dto->docId]
             );
-        }
 
-        $transaction->hset(
-            $this->getSysHashKey($dto),
-            $this->getSysField($dto),
-            json_encode(array_merge($actual, $items))
-        );
+            $transaction->sadd($this->getSysKey($dto), $item);
+        }
 
         try {
             $transaction->execute();
