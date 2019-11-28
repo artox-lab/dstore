@@ -1,19 +1,20 @@
 <?php
 /**
- * Index of list (set) builder
+ * Sorted index of list (set) builder
  *
- * @author Artur Turchin <a.turchin@artox.com>
+ * @author Denis Ptushko <d.ptushko@artox.com>
  */
 
 declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
+use ArtoxLab\DStore\Redis\Indexes\Values\SortedIndexValue;
 use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
 
-class ListBuilder extends AbstractListBuilder
+class SortedListBuilder extends AbstractListBuilder
 {
 
     /**
@@ -29,7 +30,7 @@ class ListBuilder extends AbstractListBuilder
         $transaction = $this->beginTransaction($dto);
 
         foreach ($actual as $value) {
-            $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
+            $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
         }
 
         $transaction->del($this->getSysKey($dto));
@@ -44,8 +45,8 @@ class ListBuilder extends AbstractListBuilder
     /**
      * Deleting some items from list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Deleted items
+     * @param ListDto            $dto   List dto
+     * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */
@@ -58,7 +59,7 @@ class ListBuilder extends AbstractListBuilder
         $transaction = $this->beginTransaction($dto);
 
         foreach ($items as $item) {
-            $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $item), $dto->docId);
+            $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()), $dto->docId);
             $transaction->srem($this->getSysKey($dto), $item);
         }
 
@@ -70,10 +71,10 @@ class ListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Adding some items to list
+     * Adding some items to sorted list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Added items
+     * @param ListDto            $dto   List dto
+     * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */
@@ -86,12 +87,12 @@ class ListBuilder extends AbstractListBuilder
         $transaction = $this->beginTransaction($dto);
 
         foreach ($items as $item) {
-            $transaction->sadd(
-                $this->keys->makeIndexKey($dto->docType, $dto->name, $item),
-                [$dto->docId]
+            $transaction->zadd(
+                $this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()),
+                [$dto->docId => $item->getScore()]
             );
 
-            $transaction->sadd($this->getSysKey($dto), $item);
+            $transaction->sadd($this->getSysKey($dto), $item->getValue());
         }
 
         try {

@@ -61,12 +61,38 @@ class KeysResolver
      * Make index system key (where we can find actual values)
      *
      * @param string $docType Type of document
+     * @param string $index   Index name
      *
      * @return string
      */
-    public function makeIndexSysKey(string $docType): string
+    public function makeIndexSysKey(string $docType, string $index): string
+    {
+        return sprintf('store:sys:indexes:%s:%s', $docType, $index);
+    }
+
+    /**
+     * Make index system hash key (where we can find actual values)
+     *
+     * @param string $docType Type of document
+     *
+     * @return string
+     */
+    public function makeIndexSysHashKey(string $docType): string
     {
         return sprintf('store:sys:%s:indexes', $docType);
+    }
+
+    /**
+     * Make field of hash where we stored actual state
+     *
+     * @param string $index   Index name
+     * @param string $docType Type of document
+     *
+     * @return string
+     */
+    public function makeSysField(string $index, string $docType): string
+    {
+        return sprintf('%s:%s', $index, $docType);
     }
 
     /**

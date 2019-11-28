@@ -17,7 +17,7 @@ use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
 use Predis\Transaction\MultiExec;
 
-abstract class PersistGateway extends AbstractGateway implements PersistGatewayInterface
+abstract class PersistGateway extends AbstractGateway
 {
 
     /**
@@ -31,7 +31,7 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     {
         $this->createOrUpdateDoc($doc);
         $this->persistIndexes($doc);
-        $this->persistRefs();
+        // $this->persistRefs();
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     protected function flush(DocumentInterface $doc) : void
     {
         $this->deleteIndexes($doc);
-        $this->deleteRefs();
+        // $this->deleteRefs();
         $this->deleteDoc($doc);
     }
 
@@ -116,16 +116,18 @@ abstract class PersistGateway extends AbstractGateway implements PersistGatewayI
     {
         $this->watchOnDocumentChanges($doc);
 
-        $actual = json_decode($this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getDocId()), true);
-        $new    = $doc->getDocAttributes();
+        $existedData = (string) $this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getDocId());
+        $existedData = (array) json_decode($existedData, true);
+        $newData     = $doc->getDocAttributes();
 
-        if ($actual === $new) {
+        if (empty($existedData) === false && $existedData === $newData) {
             $this->redis->unwatch();
             return;
         }
 
+        $actualData  = array_merge($existedData, $newData);
         $transaction = $this->beginTransaction($doc);
-        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getDocId(), json_encode($actual, $new));
+        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getDocId(), json_encode($actualData));
 
         try {
             $transaction->execute();

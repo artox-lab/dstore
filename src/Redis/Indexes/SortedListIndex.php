@@ -1,8 +1,8 @@
 <?php
 /**
- * Index: one doc linked to other documents
+ * Sorted index: one doc linked to other documents
  *
- * @author Artur Turchin <a.turchin@artox.com>
+ * @author Denis Ptushko <d.ptushko@artox.com>
  */
 
 declare(strict_types=1);
@@ -13,10 +13,11 @@ use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListDto;
+use ArtoxLab\DStore\Redis\Indexes\Builders\SortedListBuilder;
 use ArtoxLab\DStore\Redis\KeysResolver;
 use Predis\ClientInterface;
 
-abstract class ListIndex implements IndexInterface
+abstract class SortedListIndex implements IndexInterface
 {
     /**
      * State builder
@@ -41,7 +42,7 @@ abstract class ListIndex implements IndexInterface
     public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
         $this->state = new StateBuilder();
-        $this->index = new ListBuilder($redis, $keys);
+        $this->index = new SortedListBuilder($redis, $keys);
     }
 
     /**
