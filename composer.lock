@@ -1,11 +1,44 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "969dd1708e675beefa7ef7e5ee59fc7d",
+    "content-hash": "512ae87d41c639478d3ca860a2b80d0c",
     "packages": [
+        {
+            "name": "artox-lab/entities",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artox-lab/entities.git",
+                "reference": "179171d31955151f04d2b68f3ca5a45979537684"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artox-lab/entities/zipball/179171d31955151f04d2b68f3ca5a45979537684",
+                "reference": "179171d31955151f04d2b68f3ca5a45979537684",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ArtoxLab\\Entities\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artur Turchin",
+                    "email": "a.turchin@artox.com"
+                }
+            ],
+            "description": "Abstracts for Entities layer in Clean Architecture",
+            "time": "2019-11-22T08:14:03+00:00"
+        },
         {
             "name": "predis/predis",
             "version": "dev-master",
@@ -66,10 +99,13 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "predis/predis": 20
+        "predis/predis": 20,
+        "artox-lab/entities": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": []
 }
