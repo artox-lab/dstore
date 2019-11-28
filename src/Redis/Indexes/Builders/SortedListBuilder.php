@@ -1,6 +1,6 @@
 <?php
 /**
- * Sorted index: one doc linked to other documents
+ * Sorted index of list (set) builder
  *
  * @author Denis Ptushko <d.ptushko@artox.com>
  */
@@ -60,9 +60,8 @@ class SortedListBuilder extends AbstractListBuilder
 
         foreach ($items as $item) {
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()), $dto->docId);
+            $transaction->srem($this->getSysKey($dto), $item);
         }
-
-        $transaction->del($this->getSysKey($dto));
 
         try {
             $transaction->execute();

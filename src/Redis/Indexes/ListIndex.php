@@ -1,6 +1,6 @@
 <?php
 /**
- * One to one index: one doc related with another one doc
+ * Index: one doc linked to other documents
  *
  * @author Artur Turchin <a.turchin@artox.com>
  */

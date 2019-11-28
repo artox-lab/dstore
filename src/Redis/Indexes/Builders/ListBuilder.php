@@ -59,9 +59,8 @@ class ListBuilder extends AbstractListBuilder
 
         foreach ($items as $item) {
             $transaction->srem($this->keys->makeIndexKey($dto->docType, $dto->name, $item), $dto->docId);
+            $transaction->srem($this->getSysKey($dto), $item);
         }
-
-        $transaction->del($this->getSysKey($dto));
 
         try {
             $transaction->execute();

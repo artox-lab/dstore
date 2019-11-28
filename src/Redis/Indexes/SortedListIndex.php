@@ -1,6 +1,6 @@
 <?php
 /**
- * One to one sorted index: one doc related with another one doc
+ * Sorted index: one doc linked to other documents
  *
  * @author Denis Ptushko <d.ptushko@artox.com>
  */
