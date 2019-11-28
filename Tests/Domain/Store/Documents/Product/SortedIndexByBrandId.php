@@ -42,10 +42,11 @@ class SortedIndexByBrandId extends SortedListIndex
         return $this->state->new(
             $brandScore,
             function (BrandScore $score) : SortedIndexValue {
-                $siValue = new SortedIndexValue();
-                $siValue->setScore($score->getScore());
-                $siValue->setParam($score->getBrand()->getId());
-                return $siValue;
+                $value = new SortedIndexValue();
+                $value->setScore($score->getScore());
+                $value->setParam($score->getBrand()->getId());
+
+                return $value;
             }
         );
     }

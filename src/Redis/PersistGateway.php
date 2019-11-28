@@ -17,7 +17,7 @@ use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
 use Predis\Transaction\MultiExec;
 
-abstract class PersistGateway extends AbstractGateway implements PersistGatewayInterface
+abstract class PersistGateway extends AbstractGateway
 {
 
     /**
