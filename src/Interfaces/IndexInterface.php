@@ -7,17 +7,28 @@
 
 declare(strict_types=1);
 
-namespace DStore\Interfaces;
+namespace ArtoxLab\DStore\Interfaces;
+
+use ArtoxLab\DStore\Redis\Indexes\State;
 
 interface IndexInterface
 {
 
     /**
-     * Relations between documents
+     * Name of index, use only letters in snake_case
      *
-     * @return array
+     * @return string
      */
-    public function relations() : array;
+    public function getName() : string ;
+
+    /**
+     * State of value for filtering documents
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return string|array|State
+     */
+    public function getState(DocumentInterface $doc);
 
     /**
      * Indexing of document
@@ -27,5 +38,14 @@ interface IndexInterface
      * @return void
      */
     public function index(DocumentInterface $doc) : void;
+
+    /**
+     * Flush index of document
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    public function flush(DocumentInterface $doc) : void;
 
 }

@@ -3,7 +3,9 @@
     "description": "Abstracts for store documents to redis, index them and easy control consistency.",
     "type": "library",
     "require": {
-        "predis/predis": "^2.0@dev"
+        "predis/predis": "^2.0@dev",
+        "ext-json": "*",
+        "artox-lab/entities": "dev-master"
     },
     "license": "MIT",
     "authors": [
@@ -15,7 +17,11 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "DStore\\": "src/"
-        }
+            "ArtoxLab\\DStore\\": "src/",
+            "ArtoxLab\\DStore\\Tests\\": "Tests/"
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     }
 }
