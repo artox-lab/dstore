@@ -3,7 +3,7 @@
     "description": "Abstracts for store documents to redis, index them and easy control consistency.",
     "type": "library",
     "require": {
-        "predis/predis": "^2.0@dev",
+        "predis/predis": "^1.1",
         "ext-json": "*",
         "artox-lab/entities": "dev-master"
     },
