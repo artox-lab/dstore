@@ -13,7 +13,7 @@ use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
 
-class ListBuilder extends AbstractListBuilder
+class ListBuilder extends AbstractIndexBuilder
 {
 
     /**

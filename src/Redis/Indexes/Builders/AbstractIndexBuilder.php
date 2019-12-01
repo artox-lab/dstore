@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract List builder
+ * Abstract Index builder
  *
  * @author Denis Ptushko <d.ptushko@artox.com>
  */
@@ -13,7 +13,7 @@ use Predis\Client;
 use Predis\ClientInterface;
 use Predis\Transaction\MultiExec;
 
-abstract class AbstractListBuilder
+abstract class AbstractIndexBuilder
 {
     /**
      * Redis
