@@ -32,31 +32,31 @@ abstract class AbstractListBuilder
     /**
      * Add some items to list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Added items
+     * @param IndexDto $dto   Index dto
+     * @param array    $items Added items
      *
      * @return void
      */
-    abstract public function add(ListDto $dto, array $items) : void;
+    abstract public function add(IndexDto $dto, array $items) : void;
 
     /**
      * Flush actual state, be careful
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return void
      */
-    abstract protected function flush(ListDto $dto): void;
+    abstract protected function flush(IndexDto $dto): void;
 
     /**
      * Delete some items from list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Deleted items
+     * @param IndexDto $dto   Index dto
+     * @param array    $items Deleted items
      *
      * @return void
      */
-    abstract protected function delete(ListDto $dto, array $items): void;
+    abstract protected function delete(IndexDto $dto, array $items): void;
 
     /**
      * ListBuilder constructor.
@@ -73,12 +73,12 @@ abstract class AbstractListBuilder
     /**
      * Building index with new state
      *
-     * @param ListDto $dto   List dto
-     * @param State   $state State
+     * @param IndexDto $dto   Index dto
+     * @param State    $state State
      *
      * @return void
      */
-    public function build(ListDto $dto, State $state) : void
+    public function build(IndexDto $dto, State $state) : void
     {
         if ($state->isShouldBeFlushed() === true) {
             $this->flush($dto);
@@ -92,11 +92,11 @@ abstract class AbstractListBuilder
     /**
      * Start watching for changes in index
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return void
      */
-    protected function watch(ListDto $dto) : void
+    protected function watch(IndexDto $dto) : void
     {
         $watchKey = $this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name);
         $this->redis->watch($watchKey);
@@ -105,11 +105,11 @@ abstract class AbstractListBuilder
     /**
      * Begin transaction
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return MultiExec
      */
-    protected function beginTransaction(ListDto $dto) : MultiExec
+    protected function beginTransaction(IndexDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
         $transaction->setex($this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name), 1, '');
@@ -120,11 +120,11 @@ abstract class AbstractListBuilder
     /**
      * Get system key
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return string
      */
-    protected function getSysKey(ListDto $dto) : string
+    protected function getSysKey(IndexDto $dto) : string
     {
         return $this->keys->makeIndexSysKey($dto->docType, $dto->docId);
     }
@@ -132,11 +132,11 @@ abstract class AbstractListBuilder
     /**
      * Getting system key of hash where we stored actual states of indexes
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return string
      */
-    protected function getSysHashKey(ListDto $dto) : string
+    protected function getSysHashKey(IndexDto $dto) : string
     {
         return $this->keys->makeIndexSysHashKey($dto->docType);
     }
@@ -144,11 +144,11 @@ abstract class AbstractListBuilder
     /**
      * Getting field of hash where we stored actual state
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return string
      */
-    protected function getSysHashField(ListDto $dto) : string
+    protected function getSysHashField(IndexDto $dto) : string
     {
         return $this->keys->makeSysField($dto->docId, $dto->docType);
     }
@@ -156,11 +156,11 @@ abstract class AbstractListBuilder
     /**
      * Get actual state from the set
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return array
      */
-    protected function getActualState(ListDto $dto): array
+    protected function getActualState(IndexDto $dto): array
     {
         return $this->redis->smembers($this->getSysKey($dto));
     }
@@ -168,11 +168,11 @@ abstract class AbstractListBuilder
     /**
      * Get actual state from hash
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return array
      */
-    protected function getActualStateFromHash(ListDto $dto) : array
+    protected function getActualStateFromHash(IndexDto $dto) : array
     {
         $data = $this->redis->hget($this->getSysHashKey($dto), $this->getSysHashField($dto));
 

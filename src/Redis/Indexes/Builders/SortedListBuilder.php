@@ -20,11 +20,11 @@ class SortedListBuilder extends AbstractListBuilder
     /**
      * Flush actual state, be careful
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return void
      */
-    protected function flush(ListDto $dto) : void
+    protected function flush(IndexDto $dto) : void
     {
         $actual      = $this->getActualState($dto);
         $transaction = $this->beginTransaction($dto);
@@ -45,12 +45,12 @@ class SortedListBuilder extends AbstractListBuilder
     /**
      * Deleting some items from list
      *
-     * @param ListDto            $dto   List dto
+     * @param IndexDto           $dto   Index dto
      * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */
-    protected function delete(ListDto $dto, array $items) : void
+    protected function delete(IndexDto $dto, array $items) : void
     {
         if (empty($items) === true) {
             return;
@@ -73,12 +73,12 @@ class SortedListBuilder extends AbstractListBuilder
     /**
      * Adding some items to sorted list
      *
-     * @param ListDto            $dto   List dto
+     * @param IndexDto           $dto   Index dto
      * @param SortedIndexValue[] $items Added items
      *
      * @return void
      */
-    public function add(ListDto $dto, array $items) : void
+    public function add(IndexDto $dto, array $items) : void
     {
         if (empty($items) === true) {
             return;
@@ -92,7 +92,7 @@ class SortedListBuilder extends AbstractListBuilder
                 [$dto->docId => $item->getScore()]
             );
 
-            $transaction->sadd($this->getSysKey($dto), $item->getValue());
+            $transaction->sadd($this->getSysKey($dto), $this->keys->makeSysField($dto->name, $item->getValue()));
         }
 
         try {

@@ -12,7 +12,7 @@ namespace ArtoxLab\DStore\Redis\Indexes;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
-use ArtoxLab\DStore\Redis\Indexes\Builders\ListDto;
+use ArtoxLab\DStore\Redis\Indexes\Builders\IndexDto;
 use ArtoxLab\DStore\Redis\KeysResolver;
 use Predis\ClientInterface;
 
@@ -53,7 +53,7 @@ abstract class ListIndex implements IndexInterface
      */
     public function index(DocumentInterface $doc): void
     {
-        $dto          = new ListDto();
+        $dto          = new IndexDto();
         $dto->name    = $this->getName();
         $dto->docType = $doc->getDocType();
         $dto->docId   = $doc->getDocId();
@@ -70,7 +70,7 @@ abstract class ListIndex implements IndexInterface
      */
     public function flush(DocumentInterface $doc) : void
     {
-        $dto          = new ListDto();
+        $dto          = new IndexDto();
         $dto->name    = $this->getName();
         $dto->docType = $doc->getDocType();
         $dto->docId   = $doc->getDocId();

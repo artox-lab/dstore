@@ -19,11 +19,11 @@ class UniqueBuilder extends AbstractListBuilder
     /**
      * Flush actual state, be careful
      *
-     * @param ListDto $dto List dto
+     * @param IndexDto $dto Index dto
      *
      * @return void
      */
-    protected function flush(ListDto $dto) : void
+    protected function flush(IndexDto $dto) : void
     {
         $this->watch($dto);
 
@@ -49,12 +49,12 @@ class UniqueBuilder extends AbstractListBuilder
     /**
      * Deleting some items from list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Deleted items
+     * @param IndexDto $dto   Index dto
+     * @param array    $items Deleted items
      *
      * @return void
      */
-    protected function delete(ListDto $dto, array $items) : void
+    protected function delete(IndexDto $dto, array $items) : void
     {
         if (empty($items) === true) {
             return;
@@ -82,12 +82,12 @@ class UniqueBuilder extends AbstractListBuilder
     /**
      * Adding some items to list
      *
-     * @param ListDto $dto   List dto
-     * @param array   $items Added items
+     * @param IndexDto $dto   Index dto
+     * @param array    $items Added items
      *
      * @return void
      */
-    public function add(ListDto $dto, array $items) : void
+    public function add(IndexDto $dto, array $items) : void
     {
         if (empty($items) === true) {
             return;
