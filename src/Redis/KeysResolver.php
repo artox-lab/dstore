@@ -61,13 +61,14 @@ class KeysResolver
      * Make index system key (where we can find actual values)
      *
      * @param string $docType Type of document
+     * @param string $id      ID of document
      * @param string $index   Index name
      *
      * @return string
      */
-    public function makeIndexSysKey(string $docType, string $index): string
+    public function makeIndexSysKey(string $docType, string $id, string $index): string
     {
-        return sprintf('store:sys:indexes:%s:%s', $docType, $index);
+        return sprintf('store:sys:indexes:%s:%s:%s', $docType, $id, $index);
     }
 
     /**

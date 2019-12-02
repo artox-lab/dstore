@@ -126,7 +126,7 @@ abstract class AbstractIndexBuilder
      */
     protected function getSysKey(IndexDto $dto) : string
     {
-        return $this->keys->makeIndexSysKey($dto->docType, $dto->docId);
+        return $this->keys->makeIndexSysKey($dto->docType, $dto->docId, $dto->name);
     }
 
     /**
