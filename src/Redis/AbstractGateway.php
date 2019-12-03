@@ -29,15 +29,24 @@ class AbstractGateway
     protected $keys;
 
     /**
+     * Entity builder factory
+     *
+     * @var EntityBuilderFactory
+     */
+    protected $entityBuilder;
+
+    /**
      * AbstractGateway constructor.
      *
-     * @param ClientInterface $redis Redis
-     * @param KeysResolver    $keys  Registry of keys
+     * @param ClientInterface      $redis         Redis
+     * @param KeysResolver         $keys          Registry of keys
+     * @param EntityBuilderFactory $entityBuilder Entity builder factory
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, EntityBuilderFactory $entityBuilder)
     {
-        $this->redis = $redis;
-        $this->keys  = $keys;
+        $this->redis         = $redis;
+        $this->keys          = $keys;
+        $this->entityBuilder = $entityBuilder;
     }
 
 }
