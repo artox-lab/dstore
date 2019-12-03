@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis;
 
+use ArtoxLab\DStore\Interfaces\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -24,13 +25,22 @@ abstract class AbstractEntityBuilder
     protected $logger;
 
     /**
+     * Serializer
+     *
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * AbstractEntityBuilder constructor.
      *
-     * @param LoggerInterface $logger Logger
+     * @param LoggerInterface     $logger     Logger
+     * @param SerializerInterface $serializer Serializer
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, SerializerInterface $serializer)
     {
-        $this->logger = $logger;
+        $this->logger     = $logger;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -86,7 +96,11 @@ abstract class AbstractEntityBuilder
      */
     protected function buildLogMessage(array $attrs, ConstraintViolationListInterface $errors) : string
     {
-        $message = sprintf('%s got invalid attributes %s, errors: ', static::class, json_encode($attrs));
+        $message = sprintf(
+            '%s got invalid attributes %s, errors: ',
+            static::class,
+            $this->serializer->serialize($attrs)
+        );
 
         $message .= implode(
             ', ',

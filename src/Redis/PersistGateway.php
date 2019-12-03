@@ -92,7 +92,7 @@ abstract class PersistGateway extends AbstractGateway
                     return [];
                 }
 
-                return json_decode($result, true);
+                return $this->serializer->deserialize($result);
             };
         }
 
@@ -117,7 +117,7 @@ abstract class PersistGateway extends AbstractGateway
         $this->watchOnDocumentChanges($doc);
 
         $existedData = (string) $this->redis->hget($this->keys->makeKey($doc->getDocType()), $doc->getDocId());
-        $existedData = (array) json_decode($existedData, true);
+        $existedData = (array) $this->serializer->deserialize($existedData);
         $newData     = $doc->getDocAttributes();
 
         if (empty($existedData) === false && $existedData === $newData) {
@@ -127,7 +127,11 @@ abstract class PersistGateway extends AbstractGateway
 
         $actualData  = array_merge($existedData, $newData);
         $transaction = $this->beginTransaction($doc);
-        $transaction->hset($this->keys->makeKey($doc->getDocType()), $doc->getDocId(), json_encode($actualData));
+        $transaction->hset(
+            $this->keys->makeKey($doc->getDocType()),
+            $doc->getDocId(),
+            $this->serializer->serialize($actualData)
+        );
 
         try {
             $transaction->execute();
