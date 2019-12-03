@@ -64,6 +64,7 @@ class Product implements DocumentInterface
         return [
             'id'    => $this->product->getId(),
             'title' => $this->product->getTitle(),
+            'slug'  => $this->product->getSlug(),
         ];
     }
 

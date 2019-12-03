@@ -1,8 +1,8 @@
 <?php
 /**
- * Index: one doc linked to other documents
+ * Unique index: one doc linked to one document
  *
- * @author Artur Turchin <a.turchin@artox.com>
+ * @author Denis Ptushko <d.ptushko@artox.com>
  */
 
 declare(strict_types=1);
@@ -13,10 +13,11 @@ use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
 use ArtoxLab\DStore\Redis\Indexes\Builders\IndexDto;
+use ArtoxLab\DStore\Redis\Indexes\Builders\DictionaryBuilder;
 use ArtoxLab\DStore\Redis\KeysResolver;
 use Predis\ClientInterface;
 
-abstract class ListIndex implements IndexInterface
+abstract class DictionaryIndex implements IndexInterface
 {
     /**
      * State builder
@@ -33,7 +34,7 @@ abstract class ListIndex implements IndexInterface
     protected $index;
 
     /**
-     * ListIndex constructor.
+     * DictionaryIndex constructor.
      *
      * @param ClientInterface $redis Redis
      * @param KeysResolver    $keys  Registry of keys
@@ -41,7 +42,7 @@ abstract class ListIndex implements IndexInterface
     public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
         $this->state = new StateBuilder();
-        $this->index = new ListBuilder($redis, $keys);
+        $this->index = new DictionaryBuilder($redis, $keys);
     }
 
     /**

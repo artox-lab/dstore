@@ -36,7 +36,7 @@ class ProductEntityBuilder
             return;
         }
 
-        $this->product = new ProductEntity($attrs['id'], $attrs['title']);
+        $this->product = new ProductEntity($attrs['id'], $attrs['title'], $attrs['slug']);
     }
 
     /**

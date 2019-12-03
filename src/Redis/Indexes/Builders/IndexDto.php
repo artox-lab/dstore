@@ -1,6 +1,6 @@
 <?php
 /**
- * DTO of list index
+ * DTO of index
  *
  * @author Artur Turchin <a.turchin@artox.com>
  */
@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
-class ListDto
+class IndexDto
 {
     /**
      * List name
