@@ -70,12 +70,12 @@ abstract class OneToOneIndexBuilder
      */
     public function build(IndexDto $dto, State $state) : void
     {
-        // if ($state->isShouldBeFlushed() === true) {
+        if ($state->isShouldBeFlushed() === true) {
             $this->flush($dto);
-        // }
-        //
-        // $item = array_shift($state->getAddedItems());
-        // $this->persist($dto, $item);
+        }
+
+         $item = array_shift($state->getAddedItems());
+         $this->persist($dto, $item);
     }
 
     /**
