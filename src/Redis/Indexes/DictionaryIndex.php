@@ -13,11 +13,11 @@ use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
 use ArtoxLab\DStore\Redis\Indexes\Builders\ListBuilder;
 use ArtoxLab\DStore\Redis\Indexes\Builders\IndexDto;
-use ArtoxLab\DStore\Redis\Indexes\Builders\UniqueBuilder;
+use ArtoxLab\DStore\Redis\Indexes\Builders\DictionaryBuilder;
 use ArtoxLab\DStore\Redis\KeysResolver;
 use Predis\ClientInterface;
 
-abstract class UniqueIndex implements IndexInterface
+abstract class DictionaryIndex implements IndexInterface
 {
     /**
      * State builder
@@ -34,7 +34,7 @@ abstract class UniqueIndex implements IndexInterface
     protected $index;
 
     /**
-     * UniqueIndex constructor.
+     * DictionaryIndex constructor.
      *
      * @param ClientInterface $redis Redis
      * @param KeysResolver    $keys  Registry of keys
@@ -42,7 +42,7 @@ abstract class UniqueIndex implements IndexInterface
     public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
         $this->state = new StateBuilder();
-        $this->index = new UniqueBuilder($redis, $keys);
+        $this->index = new DictionaryBuilder($redis, $keys);
     }
 
     /**

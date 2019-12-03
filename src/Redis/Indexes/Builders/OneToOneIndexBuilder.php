@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Index builder
+ * Abstract One to One Index builder
  *
  * @author Denis Ptushko <d.ptushko@artox.com>
  */
@@ -13,7 +13,7 @@ use Predis\Client;
 use Predis\ClientInterface;
 use Predis\Transaction\MultiExec;
 
-abstract class AbstractIndexBuilder
+abstract class OneToOneIndexBuilder
 {
     /**
      * Redis
@@ -32,12 +32,12 @@ abstract class AbstractIndexBuilder
     /**
      * Add some items to list
      *
-     * @param IndexDto $dto   Index dto
-     * @param array    $items Added items
+     * @param IndexDto $dto  Index dto
+     * @param string   $item Added item
      *
      * @return void
      */
-    abstract public function add(IndexDto $dto, array $items) : void;
+    abstract public function add(IndexDto $dto, string $item) : void;
 
     /**
      * Flush actual state, be careful
@@ -47,16 +47,6 @@ abstract class AbstractIndexBuilder
      * @return void
      */
     abstract protected function flush(IndexDto $dto): void;
-
-    /**
-     * Delete some items from list
-     *
-     * @param IndexDto $dto   Index dto
-     * @param array    $items Deleted items
-     *
-     * @return void
-     */
-    abstract protected function delete(IndexDto $dto, array $items): void;
 
     /**
      * ListBuilder constructor.
@@ -82,11 +72,10 @@ abstract class AbstractIndexBuilder
     {
         if ($state->isShouldBeFlushed() === true) {
             $this->flush($dto);
-        } else if ($state->hasDeletedItems() === true) {
-            $this->delete($dto, $state->getDeletedItems());
         }
 
-        $this->add($dto, $state->getAddedItems());
+        $item = array_shift($state->getAddedItems());
+        $this->add($dto, $item);
     }
 
     /**
@@ -126,18 +115,6 @@ abstract class AbstractIndexBuilder
      */
     protected function getSysKey(IndexDto $dto) : string
     {
-        return $this->keys->makeIndexSysKey($dto->docType, $dto->docId, $dto->name);
-    }
-
-    /**
-     * Getting system key of hash where we stored actual states of indexes
-     *
-     * @param IndexDto $dto Index dto
-     *
-     * @return string
-     */
-    protected function getSysHashKey(IndexDto $dto) : string
-    {
         return $this->keys->makeIndexSysHashKey($dto->docType);
     }
 
@@ -148,7 +125,7 @@ abstract class AbstractIndexBuilder
      *
      * @return string
      */
-    protected function getSysHashField(IndexDto $dto) : string
+    protected function getSysField(IndexDto $dto) : string
     {
         return $this->keys->makeSysField($dto->docId, $dto->docType);
     }
@@ -158,29 +135,11 @@ abstract class AbstractIndexBuilder
      *
      * @param IndexDto $dto Index dto
      *
-     * @return array
+     * @return string
      */
-    protected function getActualState(IndexDto $dto): array
+    protected function getActualState(IndexDto $dto): string
     {
-        return $this->redis->smembers($this->getSysKey($dto));
-    }
-
-    /**
-     * Get actual state from hash
-     *
-     * @param IndexDto $dto Index dto
-     *
-     * @return array
-     */
-    protected function getActualStateFromHash(IndexDto $dto) : array
-    {
-        $data = $this->redis->hget($this->getSysHashKey($dto), $this->getSysHashField($dto));
-
-        if (empty($data) === true) {
-            return [];
-        }
-
-        return (array) json_decode($data, true);
+        return  $this->redis->hget($this->getSysKey($dto), $this->getSysField($dto));
     }
 
 }

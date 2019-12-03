@@ -12,11 +12,11 @@ namespace ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Redis\Indexes\ListIndex;
 use ArtoxLab\DStore\Redis\Indexes\State;
-use ArtoxLab\DStore\Redis\Indexes\UniqueIndex;
+use ArtoxLab\DStore\Redis\Indexes\DictionaryIndex;
 use ArtoxLab\DStore\Tests\Domain\Entities\Brand;
 use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
 
-class IndexBySlug extends UniqueIndex
+class IndexBySlug extends DictionaryIndex
 {
 
     /**
