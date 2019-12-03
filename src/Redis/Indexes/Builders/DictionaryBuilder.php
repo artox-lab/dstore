@@ -32,7 +32,7 @@ class DictionaryBuilder extends OneToOneIndexBuilder
 
         $transaction->hdel(
             $this->keys->makeIndexKey($dto->docType, $dto->name),
-            $actualItem
+            [$actualItem]
         );
 
         $transaction->hdel($this->getSysKey($dto), [$this->getSysField($dto)]);
@@ -52,7 +52,7 @@ class DictionaryBuilder extends OneToOneIndexBuilder
      *
      * @return void
      */
-    public function add(IndexDto $dto, string $item) : void
+    public function persist(IndexDto $dto, string $item) : void
     {
         if (empty($item) === true) {
             return;
@@ -77,7 +77,7 @@ class DictionaryBuilder extends OneToOneIndexBuilder
         try {
             $transaction->execute();
         } catch (AbortedMultiExecException | CommunicationException | ServerException $exception) {
-            $this->add($dto, $item);
+            $this->persist($dto, $item);
         }
     }
 

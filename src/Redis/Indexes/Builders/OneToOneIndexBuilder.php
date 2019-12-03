@@ -30,14 +30,14 @@ abstract class OneToOneIndexBuilder
     protected $keys;
 
     /**
-     * Add some items to list
+     * Persist item
      *
      * @param IndexDto $dto  Index dto
      * @param string   $item Added item
      *
      * @return void
      */
-    abstract public function add(IndexDto $dto, string $item) : void;
+    abstract public function persist(IndexDto $dto, string $item) : void;
 
     /**
      * Flush actual state, be careful
@@ -70,12 +70,12 @@ abstract class OneToOneIndexBuilder
      */
     public function build(IndexDto $dto, State $state) : void
     {
-        if ($state->isShouldBeFlushed() === true) {
+        // if ($state->isShouldBeFlushed() === true) {
             $this->flush($dto);
-        }
-
-        $item = array_shift($state->getAddedItems());
-        $this->add($dto, $item);
+        // }
+        //
+        // $item = array_shift($state->getAddedItems());
+        // $this->persist($dto, $item);
     }
 
     /**
@@ -135,11 +135,11 @@ abstract class OneToOneIndexBuilder
      *
      * @param IndexDto $dto Index dto
      *
-     * @return string
+     * @return string|null
      */
-    protected function getActualState(IndexDto $dto): string
+    protected function getActualState(IndexDto $dto): ?string
     {
-        return  $this->redis->hget($this->getSysKey($dto), $this->getSysField($dto));
+        return $this->redis->hget($this->getSysKey($dto), $this->getSysField($dto));
     }
 
 }
