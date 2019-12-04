@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace ArtoxLab\DStore\Redis;
 
 use ArtoxLab\DStore\Interfaces\SerializerInterface;
+use ArtoxLab\Entities\Entity;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -17,6 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractEntityBuilder
 {
+    /**
+     * Entity
+     *
+     * @var Entity
+     */
+    protected $entity;
+
     /**
      * Logger
      *
@@ -50,7 +58,14 @@ abstract class AbstractEntityBuilder
      *
      * @return void
      */
-    abstract public function create(array $attrs) : void;
+    public function create(array $attrs) : void
+    {
+        if ($this->validate($attrs) === false) {
+            return;
+        }
+
+        $this->entity = $this->makeEntity($attrs);
+    }
 
     /**
      * Returns entity
@@ -65,6 +80,15 @@ abstract class AbstractEntityBuilder
      * @return Assert\Collection
      */
     abstract protected function getRules(): Assert\Collection;
+
+    /**
+     * Returns new object of entity
+     *
+     * @param array $attrs attributes
+     *
+     * @return Entity
+     */
+    abstract protected function makeEntity(array $attrs): Entity;
 
     /**
      * Validation of attributes
