@@ -10,6 +10,7 @@ namespace ArtoxLab\DStore\Redis;
 
 use ArtoxLab\DStore\Redis\Exceptions\InvalidBuilderNameException;
 use Psr\Log\LoggerInterface;
+use ArtoxLab\DStore\Interfaces\SerializerInterface;
 
 class EntityBuilderFactory
 {
@@ -21,13 +22,22 @@ class EntityBuilderFactory
     protected $logger;
 
     /**
+     * Serializer
+     *
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * EntityBuilderFactory constructor.
      *
-     * @param LoggerInterface $logger Logger
+     * @param LoggerInterface     $logger     Logger
+     * @param SerializerInterface $serializer Serializer
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, SerializerInterface $serializer)
     {
-        $this->logger = $logger;
+        $this->logger     = $logger;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -43,7 +53,7 @@ class EntityBuilderFactory
             throw new InvalidBuilderNameException($builderName);
         }
 
-        return new $builderName($this->logger);
+        return new $builderName($this->logger, $this->serializer);
     }
 
 }
