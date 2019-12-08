@@ -74,8 +74,10 @@ abstract class OneToOneIndexBuilder
             $this->flush($dto);
         }
 
-         $item = array_shift($state->getAddedItems());
-         $this->persist($dto, $item);
+        $items = $state->getAddedItems();
+        $item  = array_shift($items);
+
+        $this->persist($dto, $item);
     }
 
     /**
