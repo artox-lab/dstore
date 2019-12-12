@@ -1,22 +1,21 @@
 <?php
 /**
- * Index: filtering products by slug
+ * Index: filtering products by brand ID
  *
- * @author Denis Ptushko <d.ptushko@artox.com>
+ * @author Artur Turchin <a.turchin@artox.com>
  */
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Redis\Indexes\ListIndex;
 use ArtoxLab\DStore\Redis\Indexes\State;
-use ArtoxLab\DStore\Redis\Indexes\DictionaryIndex;
-use ArtoxLab\DStore\Tests\Domain\Entities\Brand;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+use ArtoxLab\DStore\Examples\Domain\Entities\Brand;
+use ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
-class IndexBySlug extends DictionaryIndex
+class IndexByBrandId extends ListIndex
 {
 
     /**
@@ -26,7 +25,7 @@ class IndexBySlug extends DictionaryIndex
      */
     public function getName(): string
     {
-        return 'by_slug';
+        return 'by_brand_id';
     }
 
     /**
@@ -38,8 +37,12 @@ class IndexBySlug extends DictionaryIndex
      */
     public function getState(DocumentInterface $doc)
     {
-        $attr = $doc->getDocAttributes();
-        return $this->state->new($attr['slug']);
+        return $this->state->new(
+            $doc->getBrandState(),
+            function (Brand $brand) : int {
+                return $brand->getId();
+            }
+        );
     }
 
 }
