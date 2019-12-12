@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Entities;
+namespace ArtoxLab\DStore\Examples\Domain\Entities;
 
 use ArtoxLab\Entities\Entity;
 use ArtoxLab\Entities\States\State as StateInterface;

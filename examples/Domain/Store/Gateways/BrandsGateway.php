@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Gateways;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Gateways;
 
 use ArtoxLab\DStore\Redis\PersistGateway;
-use ArtoxLab\DStore\Tests\Domain\Entities\Brand as BrandEntity;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\Brand;
+use ArtoxLab\DStore\Examples\Domain\Entities\Brand as BrandEntity;
+use ArtoxLab\DStore\Examples\Domain\Store\Documents\Brand;
 
 class BrandsGateway extends PersistGateway
 {
