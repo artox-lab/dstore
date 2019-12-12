@@ -280,7 +280,7 @@ abstract class PersistGateway extends AbstractGateway
         }
 
         if (class_exists($class) === false) {
-            throw new \RuntimeException("Name of reference can't be a empty string");
+            throw new \RuntimeException("Class of reference does not exist");
         }
 
         return new $class($this->redis, $this->keys);

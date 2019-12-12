@@ -10,6 +10,7 @@ namespace ArtoxLab\DStore\Redis\References\Builders;
 use ArtoxLab\DStore\Redis\References\Builders\ReferenceDto;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\KeysResolver;
+use ArtoxLab\DStore\Serializers\JsonSerializer;
 use Predis\Client;
 use Predis\ClientInterface;
 use Predis\Transaction\MultiExec;
@@ -29,6 +30,13 @@ abstract class ReferenceBuilder
      * @var KeysResolver
      */
     protected $keys;
+
+    /**
+     * Serializer
+     *
+     * @var JsonSerializer
+     */
+    protected $serializer;
 
     /**
      * Add some items to list
@@ -69,6 +77,7 @@ abstract class ReferenceBuilder
     {
         $this->redis = $redis;
         $this->keys  = $keys;
+        $this->serializer = new JsonSerializer();
     }
 
     /**
@@ -133,7 +142,7 @@ abstract class ReferenceBuilder
             return [];
         }
 
-        return (array) json_decode($data, true);
+        return $this->serializer->deserialize($data);
     }
 
     /**
@@ -151,7 +160,7 @@ abstract class ReferenceBuilder
             return [];
         }
 
-        return (array) json_decode($data, true);
+        return $this->serializer->deserialize($data);
     }
 
 }
