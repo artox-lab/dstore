@@ -16,6 +16,7 @@ use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\Indexes\StateBuilder;
 use ArtoxLab\DStore\Redis\KeysResolver;
 use ArtoxLab\DStore\Redis\References\Builders\ListBuilder;
+use ArtoxLab\DStore\Serializers\JsonSerializer;
 use Predis\ClientInterface;
 
 abstract class HashReference implements ReferenceInterface

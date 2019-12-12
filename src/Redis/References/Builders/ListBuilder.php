@@ -27,7 +27,10 @@ class ListBuilder extends ReferenceBuilder
     protected function flush(ReferenceDto $dto) : void
     {
         $transaction = $this->beginTransaction($dto);
-        $transaction->hdel($this->keys->makeReferenceKey($dto->docType), [$dto->docId . ':' . $dto->name]);
+        $transaction->hdel(
+            $this->keys->makeReferenceKey($dto->docType),
+            [$this->keys->makeReferenceFiled($dto->docId, $dto->name)]
+        );
 
         try {
             $transaction->execute();
@@ -58,13 +61,13 @@ class ListBuilder extends ReferenceBuilder
         if (empty($newState) === false) {
             $transaction->hset(
                 $this->keys->makeReferenceKey($dto->docType),
-                $dto->docId . ':' . $dto->name,
-                $newState
+                $this->keys->makeReferenceFiled($dto->docId, $dto->name),
+                $this->serializer->serialize($newState)
             );
         } else {
             $transaction->hdel(
                 $this->keys->makeReferenceKey($dto->docType),
-                [$dto->docId . ':' . $dto->name]
+                [$this->keys->makeReferenceFiled($dto->docId, $dto->name)]
             );
         }
 
@@ -97,8 +100,8 @@ class ListBuilder extends ReferenceBuilder
 
         $transaction->hset(
             $this->keys->makeReferenceKey($dto->docType),
-            $dto->docId . ':' . $dto->name,
-            json_encode($newState)
+            $this->keys->makeReferenceFiled($dto->docId, $dto->name),
+            $this->serializer->serialize($newState)
         );
 
         try {

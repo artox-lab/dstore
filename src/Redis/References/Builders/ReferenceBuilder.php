@@ -108,7 +108,7 @@ abstract class ReferenceBuilder
      */
     protected function watch(ReferenceDto $dto) : void
     {
-        $watchKey = $this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name);
+        $watchKey = $this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name);
         $this->redis->watch($watchKey);
     }
 
@@ -122,7 +122,7 @@ abstract class ReferenceBuilder
     protected function beginTransaction(ReferenceDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name), 1, '');
+        $transaction->setex($this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name), 1, '');
 
         return $transaction;
     }
@@ -135,24 +135,6 @@ abstract class ReferenceBuilder
      * @return array
      */
     protected function getActualState(ReferenceDto $dto): array
-    {
-        $data = $this->redis->hget($this->keys->makeReferenceKey($dto->docType), $dto->docId . ':' . $dto->name);
-
-        if (empty($data) === true) {
-            return [];
-        }
-
-        return $this->serializer->deserialize($data);
-    }
-
-    /**
-     * Get actual state from hash
-     *
-     * @param ReferenceDto $dto Reference dto
-     *
-     * @return array
-     */
-    protected function getActualStateFromHash(ReferenceDto $dto) : array
     {
         $data = $this->redis->hget($this->keys->makeReferenceKey($dto->docType), $dto->docId . ':' . $dto->name);
 
