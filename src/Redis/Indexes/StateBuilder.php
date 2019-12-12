@@ -50,7 +50,7 @@ class StateBuilder
         if (empty($valueResolver) === true) {
             throw new \RuntimeException('Value resolver is required for objects.');
         }
-
+        
         if ($state instanceof StateCollection) {
             return new State(
                 array_map($valueResolver, $state->getAddedItems()),

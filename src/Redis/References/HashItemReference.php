@@ -11,6 +11,7 @@ namespace ArtoxLab\DStore\Redis\References;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\ReferenceInterface;
+use ArtoxLab\DStore\Redis\References\Builders\ItemBuilder;
 use ArtoxLab\DStore\Redis\References\Builders\ReferenceDto;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\Indexes\StateBuilder;
@@ -19,7 +20,7 @@ use ArtoxLab\DStore\Redis\References\Builders\ListBuilder;
 use ArtoxLab\DStore\Serializers\JsonSerializer;
 use Predis\ClientInterface;
 
-abstract class HashReference implements ReferenceInterface
+abstract class HashItemReference implements ReferenceInterface
 {
     /**
      * State builder
@@ -31,7 +32,7 @@ abstract class HashReference implements ReferenceInterface
     /**
      * Reference builder
      *
-     * @var ListBuilder
+     * @var ItemBuilder
      */
     protected $reference;
 
@@ -44,7 +45,7 @@ abstract class HashReference implements ReferenceInterface
     public function __construct(ClientInterface $redis, KeysResolver $keys)
     {
         $this->state     = new StateBuilder();
-        $this->reference = new ListBuilder($redis, $keys);
+        $this->reference = new ItemBuilder($redis, $keys);
     }
 
     /**

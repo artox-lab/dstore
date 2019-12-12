@@ -14,7 +14,7 @@ use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
 
-class ListBuilder extends ReferenceBuilder
+class ListBuilder extends ReferenceListBuilder
 {
 
     /**

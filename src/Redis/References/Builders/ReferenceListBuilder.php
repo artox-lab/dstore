@@ -15,7 +15,7 @@ use Predis\Client;
 use Predis\ClientInterface;
 use Predis\Transaction\MultiExec;
 
-abstract class ReferenceBuilder
+abstract class ReferenceListBuilder
 {
     /**
      * Redis
