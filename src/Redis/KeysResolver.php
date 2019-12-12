@@ -132,7 +132,7 @@ class KeysResolver
      */
     public function makeWatchingOnDocIndexKey(string $docType, string $id, string $index): string
     {
-        return sprintf('store:watching:%s:%s:%s', $docType, $id, $index);
+        return sprintf('store:watching:index:%s:%s:%s', $docType, $id, $index);
     }
 
     /**
@@ -146,7 +146,7 @@ class KeysResolver
      */
     public function makeWatchingOnDocReferenceKey(string $docType, string $id, string $reference): string
     {
-        return sprintf('store:watching:%s:%s:%s', $docType, $id, $reference);
+        return sprintf('store:watching:reference:%s:%s:%s', $docType, $id, $reference);
     }
 
 }
