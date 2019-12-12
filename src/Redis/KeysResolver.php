@@ -58,6 +58,18 @@ class KeysResolver
     }
 
     /**
+     * Make reference key
+     *
+     * @param string $docType Type of document
+     *
+     * @return string
+     */
+    public function makeReferenceKey(string $docType) : string
+    {
+        return $this->makeKey($docType) . ':refs';
+    }
+
+    /**
      * Make index system key (where we can find actual values)
      *
      * @param string $docType Type of document
