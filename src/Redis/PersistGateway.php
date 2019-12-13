@@ -283,7 +283,7 @@ abstract class PersistGateway extends AbstractGateway
             throw new \RuntimeException("Class of reference does not exist");
         }
 
-        return new $class($this->redis, $this->keys);
+        return new $class($this->redis, $this->keys, $this->serializer);
     }
 
 }

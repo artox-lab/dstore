@@ -41,8 +41,8 @@ abstract class ReferenceListBuilder
     /**
      * Add some items to list
      *
-     * @param ReferenceDto $dto Reference dto
-     * @param array $items Added items
+     * @param ReferenceDto $dto   Reference dto
+     * @param array        $items Added items
      *
      * @return void
      */
@@ -60,8 +60,8 @@ abstract class ReferenceListBuilder
     /**
      * Delete some items from list
      *
-     * @param ReferenceDto $dto Reference dto
-     * @param array $items Deleted items
+     * @param ReferenceDto $dto   Reference dto
+     * @param array        $items Deleted items
      *
      * @return void
      */
@@ -70,21 +70,22 @@ abstract class ReferenceListBuilder
     /**
      * ListBuilder constructor.
      *
-     * @param ClientInterface $redis Redis client
-     * @param KeysResolver    $keys  Keys
+     * @param ClientInterface $redis      Redis client
+     * @param KeysResolver    $keys       Keys
+     * @param JsonSerializer  $serializer JsonSerializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, JsonSerializer $serializer)
     {
-        $this->redis = $redis;
-        $this->keys  = $keys;
-        $this->serializer = new JsonSerializer();
+        $this->redis      = $redis;
+        $this->keys       = $keys;
+        $this->serializer = $serializer;
     }
 
     /**
      * Building index with new state
      *
-     * @param ReferenceDto $dto Reference dto
-     * @param State $state State
+     * @param ReferenceDto $dto   Reference dto
+     * @param State        $state State
      *
      * @return void
      */
@@ -95,7 +96,7 @@ abstract class ReferenceListBuilder
         } else if ($state->hasDeletedItems() === true) {
             $this->delete($dto, $state->getDeletedItems());
         }
-        
+
         $this->add($dto, $state->getAddedItems());
     }
 

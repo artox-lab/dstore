@@ -29,7 +29,7 @@ class ItemBuilder extends ReferenceItemBuilder
         $transaction = $this->beginTransaction($dto);
         $transaction->hdel(
             $this->keys->makeReferenceKey($dto->docType),
-            [$this->keys->makeReferenceFiled($dto->docId, $dto->name)]
+            [$this->keys->makeReferenceField($dto->docId, $dto->name)]
         );
 
         try {
@@ -57,7 +57,7 @@ class ItemBuilder extends ReferenceItemBuilder
 
         $transaction->hset(
             $this->keys->makeReferenceKey($dto->docType),
-            $this->keys->makeReferenceFiled($dto->docId, $dto->name),
+            $this->keys->makeReferenceField($dto->docId, $dto->name),
             $item
         );
 

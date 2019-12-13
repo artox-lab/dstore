@@ -39,13 +39,14 @@ abstract class HashItemReference implements ReferenceInterface
     /**
      * HashReference constructor.
      *
-     * @param ClientInterface $redis Redis
-     * @param KeysResolver    $keys  Registry of keys
+     * @param ClientInterface $redis          Redis
+     * @param KeysResolver    $keys           Registry of keys
+     * @param JsonSerializer  $jsonSerializer JsonSerializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, JsonSerializer $jsonSerializer)
     {
         $this->state     = new StateBuilder();
-        $this->reference = new ItemBuilder($redis, $keys);
+        $this->reference = new ItemBuilder($redis, $keys, $jsonSerializer);
     }
 
     /**

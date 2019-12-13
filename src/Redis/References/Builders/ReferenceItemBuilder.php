@@ -41,8 +41,8 @@ abstract class ReferenceItemBuilder
     /**
      * Add item
      *
-     * @param ReferenceDto $dto Reference dto
-     * @param string $item Added item
+     * @param ReferenceDto $dto  Reference dto
+     * @param string       $item Added item
      *
      * @return void
      */
@@ -60,21 +60,22 @@ abstract class ReferenceItemBuilder
     /**
      * ItemBuilder constructor.
      *
-     * @param ClientInterface $redis Redis client
-     * @param KeysResolver    $keys  Keys
+     * @param ClientInterface $redis      Redis client
+     * @param KeysResolver    $keys       Keys
+     * @param JsonSerializer  $serializer JsonSerializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, JsonSerializer $serializer)
     {
-        $this->redis = $redis;
-        $this->keys  = $keys;
-        $this->serializer = new JsonSerializer();
+        $this->redis      = $redis;
+        $this->keys       = $keys;
+        $this->serializer = $serializer;
     }
 
     /**
      * Building index with new state
      *
-     * @param ReferenceDto $dto Reference dto
-     * @param State $state State
+     * @param ReferenceDto $dto   Reference dto
+     * @param State        $state State
      *
      * @return void
      */
@@ -117,26 +118,4 @@ abstract class ReferenceItemBuilder
 
         return $transaction;
     }
-
-    /**
-     * Get actual state from the set
-     *
-     * @param ReferenceDto $dto Reference dto
-     *
-     * @return array
-     */
-    protected function getActualState(ReferenceDto $dto): array
-    {
-        $data = $this->redis->hget(
-            $this->keys->makeReferenceKey($dto->docType),
-            $this->keys->makeReferenceFiled($dto->docId, $dto->name)
-        );
-
-        if (empty($data) === true) {
-            return [];
-        }
-
-        return $this->serializer->deserialize($data);
-    }
-
 }

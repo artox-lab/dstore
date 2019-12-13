@@ -77,7 +77,7 @@ class KeysResolver
      *
      * @return string
      */
-    public function makeReferenceFiled(string $id, string $refName) : string
+    public function makeReferenceField(string $id, string $refName) : string
     {
         return $id . ':' . $refName;
     }

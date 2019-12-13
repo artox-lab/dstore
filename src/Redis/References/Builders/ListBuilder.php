@@ -29,7 +29,7 @@ class ListBuilder extends ReferenceListBuilder
         $transaction = $this->beginTransaction($dto);
         $transaction->hdel(
             $this->keys->makeReferenceKey($dto->docType),
-            [$this->keys->makeReferenceFiled($dto->docId, $dto->name)]
+            [$this->keys->makeReferenceField($dto->docId, $dto->name)]
         );
 
         try {
@@ -61,13 +61,13 @@ class ListBuilder extends ReferenceListBuilder
         if (empty($newState) === false) {
             $transaction->hset(
                 $this->keys->makeReferenceKey($dto->docType),
-                $this->keys->makeReferenceFiled($dto->docId, $dto->name),
+                $this->keys->makeReferenceField($dto->docId, $dto->name),
                 $this->serializer->serialize($newState)
             );
         } else {
             $transaction->hdel(
                 $this->keys->makeReferenceKey($dto->docType),
-                [$this->keys->makeReferenceFiled($dto->docId, $dto->name)]
+                [$this->keys->makeReferenceField($dto->docId, $dto->name)]
             );
         }
 
@@ -100,7 +100,7 @@ class ListBuilder extends ReferenceListBuilder
 
         $transaction->hset(
             $this->keys->makeReferenceKey($dto->docType),
-            $this->keys->makeReferenceFiled($dto->docId, $dto->name),
+            $this->keys->makeReferenceField($dto->docId, $dto->name),
             $this->serializer->serialize($newState)
         );
 
