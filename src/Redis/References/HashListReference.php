@@ -11,6 +11,7 @@ namespace ArtoxLab\DStore\Redis\References;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\ReferenceInterface;
+use ArtoxLab\DStore\Interfaces\SerializerInterface;
 use ArtoxLab\DStore\Redis\References\Builders\ReferenceDto;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\Indexes\StateBuilder;
@@ -38,11 +39,11 @@ abstract class HashListReference implements ReferenceInterface
     /**
      * HashReference constructor.
      *
-     * @param ClientInterface $redis          Redis
-     * @param KeysResolver    $keys           Registry of keys
-     * @param JsonSerializer  $jsonSerializer JsonSerializer
+     * @param ClientInterface     $redis      Redis
+     * @param KeysResolver        $keys       Registry of keys
+     * @param SerializerInterface $serializer Serializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys, JsonSerializer $jsonSerializer)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, SerializerInterface $jsonSerializer)
     {
         $this->state     = new StateBuilder();
         $this->reference = new ListBuilder($redis, $keys, $jsonSerializer);

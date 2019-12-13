@@ -7,6 +7,7 @@
 
 namespace ArtoxLab\DStore\Redis\References\Builders;
 
+use ArtoxLab\DStore\Interfaces\SerializerInterface;
 use ArtoxLab\DStore\Redis\References\Builders\ReferenceDto;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\KeysResolver;
@@ -62,9 +63,9 @@ abstract class ReferenceItemBuilder
      *
      * @param ClientInterface $redis      Redis client
      * @param KeysResolver    $keys       Keys
-     * @param JsonSerializer  $serializer JsonSerializer
+     * @param SerializerInterface  $serializer    Serializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys, JsonSerializer $serializer)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, SerializerInterface $serializer)
     {
         $this->redis      = $redis;
         $this->keys       = $keys;
