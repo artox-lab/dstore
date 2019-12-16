@@ -61,9 +61,9 @@ abstract class ReferenceItemBuilder
     /**
      * ItemBuilder constructor.
      *
-     * @param ClientInterface $redis      Redis client
-     * @param KeysResolver    $keys       Keys
-     * @param SerializerInterface  $serializer    Serializer
+     * @param ClientInterface     $redis      Redis client
+     * @param KeysResolver        $keys       Keys
+     * @param SerializerInterface $serializer Serializer
      */
     public function __construct(ClientInterface $redis, KeysResolver $keys, SerializerInterface $serializer)
     {
@@ -119,4 +119,5 @@ abstract class ReferenceItemBuilder
 
         return $transaction;
     }
+
 }

@@ -43,10 +43,10 @@ abstract class HashListReference implements ReferenceInterface
      * @param KeysResolver        $keys       Registry of keys
      * @param SerializerInterface $serializer Serializer
      */
-    public function __construct(ClientInterface $redis, KeysResolver $keys, SerializerInterface $jsonSerializer)
+    public function __construct(ClientInterface $redis, KeysResolver $keys, SerializerInterface $serializer)
     {
         $this->state     = new StateBuilder();
-        $this->reference = new ListBuilder($redis, $keys, $jsonSerializer);
+        $this->reference = new ListBuilder($redis, $keys, $serializer);
     }
 
     /**
