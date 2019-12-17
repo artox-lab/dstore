@@ -2,13 +2,6 @@
     "name": "artox-lab/dstore",
     "description": "Abstracts for store documents to redis, index them and easy control consistency.",
     "type": "library",
-    "require": {
-        "predis/predis": "^1.1",
-        "ext-json": "*",
-        "artox-lab/entities": "dev-master",
-        "symfony/validator": "4.3.*",
-        "psr/log": "^1.1@dev"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -16,14 +9,30 @@
             "email": "a.turchin@artox.com"
         }
     ],
-    "minimum-stability": "dev",
+    "require": {
+        "predis/predis": "^1.1",
+        "ext-json": "*",
+        "artox-lab/entities": "dev-master",
+        "symfony/validator": "4.3.*",
+        "psr/log": "^1.1@dev"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^1.9",
+        "phpunit/phpunit": "^8.5"
+    },
     "autoload": {
         "psr-4": {
             "ArtoxLab\\DStore\\": "src/",
-            "ArtoxLab\\DStore\\Tests\\": "Tests/"
+            "ArtoxLab\\DStore\\Examples\\": "examples/"
         },
         "exclude-from-classmap": [
-            "/Tests/"
+            "/Examples/"
         ]
-    }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ArtoxLab\\DStore\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev"
 }

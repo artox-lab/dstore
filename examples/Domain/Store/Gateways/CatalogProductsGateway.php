@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Gateways;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Gateways;
 
 
 use ArtoxLab\DStore\Redis\KeysResolver;
-use ArtoxLab\DStore\Tests\Domain\Entities\Product;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\ProductEntityBuilder;
+use ArtoxLab\DStore\Examples\Domain\Entities\Product;
+use ArtoxLab\DStore\Examples\Domain\Store\Documents\ProductEntityBuilder;
 use Predis\Client;
 use Predis\ClientInterface;
 

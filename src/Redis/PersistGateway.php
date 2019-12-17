@@ -12,6 +12,7 @@ namespace ArtoxLab\DStore\Redis;
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Interfaces\PersistGatewayInterface;
 use ArtoxLab\DStore\Interfaces\IndexInterface;
+use ArtoxLab\DStore\Interfaces\ReferenceInterface;
 use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
@@ -31,7 +32,7 @@ abstract class PersistGateway extends AbstractGateway
     {
         $this->createOrUpdateDoc($doc);
         $this->persistIndexes($doc);
-        // $this->persistRefs();
+        $this->persistRefs($doc);
     }
 
     /**
@@ -44,7 +45,7 @@ abstract class PersistGateway extends AbstractGateway
     protected function flush(DocumentInterface $doc) : void
     {
         $this->deleteIndexes($doc);
-        // $this->deleteRefs();
+        $this->deleteRefs($doc);
         $this->deleteDoc($doc);
     }
 
@@ -204,6 +205,48 @@ abstract class PersistGateway extends AbstractGateway
     }
 
     /**
+     * Persisting references of document
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    private function persistRefs(DocumentInterface $doc) : void
+    {
+        $classes = $doc->getDocReferences();
+
+        if (empty($classes) === true) {
+            return;
+        }
+
+        foreach ($classes as $class) {
+            $ref = $this->makeReferenceByClassName($class);
+            $ref->persist($doc);
+        }
+    }
+
+    /**
+     * Flushing references of document
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return void
+     */
+    private function deleteRefs(DocumentInterface $doc) : void
+    {
+        $classes = $doc->getDocReferences();
+
+        if (empty($classes) === true) {
+            return;
+        }
+
+        foreach ($classes as $class) {
+            $ref = $this->makeReferenceByClassName($class);
+            $ref->flush($doc);
+        }
+    }
+
+    /**
      * Creating instance of index by class name
      *
      * @param string $class Index's class name
@@ -221,6 +264,26 @@ abstract class PersistGateway extends AbstractGateway
         }
 
         return new $class($this->redis, $this->keys);
+    }
+
+    /**
+     * Creating instance of reference by class name
+     *
+     * @param string $class Refs's class name
+     *
+     * @return ReferenceInterface
+     */
+    private function makeReferenceByClassName(string $class) : ReferenceInterface
+    {
+        if (empty($class) === true) {
+            throw new \RuntimeException("Name of reference can't be a empty string");
+        }
+
+        if (class_exists($class) === false) {
+            throw new \RuntimeException("Class of reference does not exist");
+        }
+
+        return new $class($this->redis, $this->keys, $this->serializer);
     }
 
 }

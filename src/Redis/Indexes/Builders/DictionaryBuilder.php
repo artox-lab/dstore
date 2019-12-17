@@ -47,12 +47,12 @@ class DictionaryBuilder extends OneToOneIndexBuilder
     /**
      * Adding an item to relation
      *
-     * @param IndexDto $dto  Index dto
-     * @param string   $item Added item
+     * @param IndexDto    $dto  Index dto
+     * @param string|null $item Added item
      *
      * @return void
      */
-    public function persist(IndexDto $dto, string $item) : void
+    public function persist(IndexDto $dto, ?string $item) : void
     {
         if (empty($item) === true) {
             return;

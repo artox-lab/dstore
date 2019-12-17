@@ -63,7 +63,7 @@ class State
      */
     public function hasAddedItems() : bool
     {
-        return (empty($this->added) === true);
+        return (empty($this->added) === false);
     }
 
     /**
@@ -83,7 +83,7 @@ class State
      */
     public function hasDeletedItems() : bool
     {
-        return (empty($this->deleted) === true);
+        return (empty($this->deleted) === false);
     }
 
     /**
