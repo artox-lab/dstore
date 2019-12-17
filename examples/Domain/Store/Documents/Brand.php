@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Documents;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Documents;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
-use ArtoxLab\DStore\Tests\Domain\Entities\Brand as BrandEntity;
-use ArtoxLab\DStore\Tests\Domain\Entities\Product as ProductEntity;
+use ArtoxLab\DStore\Examples\Domain\Entities\Brand as BrandEntity;
+use ArtoxLab\DStore\Examples\Domain\Entities\Product as ProductEntity;
 
 class Brand implements DocumentInterface
 {

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Entities;
+namespace ArtoxLab\DStore\Examples\Domain\Entities;
 
 use ArtoxLab\Entities\Entity;
 use ArtoxLab\Entities\States\State as StateInterface;
@@ -30,6 +30,13 @@ class Product implements Entity
     private $title;
 
     /**
+     * Slug of product
+     *
+     * @var string
+     */
+    private $slug;
+
+    /**
      * Brand of product
      *
      * @var StateItem|null
@@ -48,11 +55,13 @@ class Product implements Entity
      *
      * @param int    $id    ID
      * @param string $title Title of product
+     * @param string $slug  Slug of product
      */
-    public function __construct(int $id, string $title)
+    public function __construct(int $id, string $title, string $slug)
     {
         $this->id    = $id;
         $this->title = $title;
+        $this->slug  = $slug;
 
         $this->brand = new StateItem(null);
     }
@@ -75,6 +84,16 @@ class Product implements Entity
     public function getTitle() : string
     {
         return $this->title;
+    }
+
+    /**
+     * Getting slug of product
+     *
+     * @return string
+     */
+    public function getSlug() : string
+    {
+        return $this->slug;
     }
 
     /**

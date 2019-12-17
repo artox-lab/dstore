@@ -24,8 +24,9 @@ class JsonSerializer implements SerializerInterface
      *
      * @param int $options Json encode options
      */
-    public function __construct(int $options = (JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
-    {
+    public function __construct(
+        int $options = (JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION)
+    ) {
         $this->options = $options;
     }
 

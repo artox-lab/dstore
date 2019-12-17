@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Redis\Indexes\ListIndex;
 use ArtoxLab\DStore\Redis\Indexes\State;
-use ArtoxLab\DStore\Tests\Domain\Entities\Brand;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+use ArtoxLab\DStore\Examples\Domain\Entities\Brand;
+use ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
 class IndexByBrandId extends ListIndex
 {
