@@ -184,7 +184,7 @@ abstract class PersistGateway extends AbstractGateway
     }
 
     /**
-     * Persisting indexes of document
+     * Flushing indexes of document
      *
      * @param DocumentInterface $doc Document
      *
