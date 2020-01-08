@@ -126,15 +126,9 @@ abstract class AbstractEntityBuilder
             $this->serializer->serialize($attrs)
         );
 
-        $message .= implode(
-            ', ',
-            array_map(
-                function (ConstraintViolationInterface $error): string {
-                    return $error->getMessage();
-                },
-                $errors
-            )
-        );
+        foreach ($errors as $error) {
+            $message .= $error->getMesage() . PHP_EOL;
+        }
 
         return $message;
     }
