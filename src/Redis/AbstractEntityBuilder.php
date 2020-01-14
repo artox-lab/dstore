@@ -127,7 +127,7 @@ abstract class AbstractEntityBuilder
         );
 
         foreach ($errors as $error) {
-            $message .= $error->getMesage() . PHP_EOL;
+            $message .= $error->getMessage() . PHP_EOL;
         }
 
         return $message;
