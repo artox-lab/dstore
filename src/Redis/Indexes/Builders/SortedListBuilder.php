@@ -92,7 +92,10 @@ class SortedListBuilder extends OneToManyIndexBuilder
                 [$dto->docId => $item->getScore()]
             );
 
-            $transaction->sadd($this->getSysKey($dto), $this->keys->makeSysField($dto->name, $item->getValue()));
+            $transaction->sadd(
+                $this->getSysKey($dto),
+                $this->keys->makeSysField($dto->name, (string) $item->getValue())
+            );
         }
 
         try {
