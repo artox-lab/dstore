@@ -33,6 +33,7 @@ class SortedListBuilder extends OneToManyIndexBuilder
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
         }
 
+
         $transaction->del($this->getSysKey($dto));
 
         try {
@@ -92,7 +93,10 @@ class SortedListBuilder extends OneToManyIndexBuilder
                 [$dto->docId => $item->getScore()]
             );
 
-            $transaction->sadd($this->getSysKey($dto), $this->keys->makeSysField($dto->name, $item->getValue()));
+            $transaction->sadd(
+                $this->getSysKey($dto),
+                (string) $item->getValue()
+            );
         }
 
         try {
