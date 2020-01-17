@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+namespace ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
 use ArtoxLab\DStore\Interfaces\DocumentInterface;
 use ArtoxLab\DStore\Redis\Indexes\SortedListIndex;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\Indexes\Values\SortedIndexValue;
-use ArtoxLab\DStore\Tests\Domain\Entities\BrandScore;
-use ArtoxLab\DStore\Tests\Domain\Store\Documents\Product;
+use ArtoxLab\DStore\Examples\Domain\Entities\BrandScore;
+use ArtoxLab\DStore\Examples\Domain\Store\Documents\Product;
 
 class SortedIndexByBrandId extends SortedListIndex
 {
