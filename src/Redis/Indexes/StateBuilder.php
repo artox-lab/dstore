@@ -63,6 +63,10 @@ class StateBuilder
             return new State([], [], false);
         }
 
+        if ($state instanceof StateItem && empty($state->get()) === true) {
+            return new State([], [], true);
+        }
+
         return new State([$valueResolver($state->get())], [], true);
     }
 

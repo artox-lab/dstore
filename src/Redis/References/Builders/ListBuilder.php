@@ -55,6 +55,7 @@ class ListBuilder extends ReferenceListBuilder
 
         $actual   = $this->getActualState($dto);
         $newState = array_diff($actual, $items);
+        $newState = array_values($newState);
 
         $transaction = $this->beginTransaction($dto);
 
@@ -96,7 +97,7 @@ class ListBuilder extends ReferenceListBuilder
 
         $transaction = $this->beginTransaction($dto);
 
-        $newState = array_merge($actual, $items);
+        $newState = array_unique(array_merge($actual, $items));
 
         $transaction->hset(
             $this->keys->makeReferenceKey($dto->docType),

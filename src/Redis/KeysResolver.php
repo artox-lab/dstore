@@ -138,15 +138,33 @@ class KeysResolver
     /**
      * Make key of watching changes on document reference
      *
-     * @param string $docType    Type of document
-     * @param string $id         ID of document
-     * @param string $reference  Name of reference
+     * @param string $docType   Type of document
+     * @param string $id        ID of document
+     * @param string $reference Name of reference
      *
      * @return string
      */
     public function makeWatchingOnDocReferenceKey(string $docType, string $id, string $reference): string
     {
         return sprintf('store:watching:reference:%s:%s:%s', $docType, $id, $reference);
+    }
+
+    /**
+     * Make list of reference fields
+     *
+     * @param int[]  $ids     Entity ID's list
+     * @param string $refName Ref name
+     *
+     * @return array
+     */
+    public function mapReferenceFields(array $ids, string $refName): array
+    {
+        return array_map(
+            function (int $id) use ($refName): string {
+                return $this->makeReferenceField((string) $id, $refName);
+            },
+            $ids
+        );
     }
 
 }
