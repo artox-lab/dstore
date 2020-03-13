@@ -25,6 +25,18 @@ class KeysResolver
     }
 
     /**
+     * Make temporary key
+     *
+     * @param string $hashName Hashed name of key
+     *
+     * @return string
+     */
+    public function makeTemporaryKey(string $hashName): string
+    {
+        return sprintf('store:tmp:%s', $hashName);
+    }
+
+    /**
      * Make key of watching changes on document
      *
      * @param string $docType Type of document
