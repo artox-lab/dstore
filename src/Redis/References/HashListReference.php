@@ -83,4 +83,16 @@ abstract class HashListReference implements ReferenceInterface
         $this->reference->build($dto, new State([], [], true));
     }
 
+    /**
+     * Indicates if the reference should persist/flush.
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return bool
+     */
+    public function shouldHandle(DocumentInterface $doc): bool
+    {
+        return true;
+    }
+
 }
