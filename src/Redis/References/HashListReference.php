@@ -84,13 +84,13 @@ abstract class HashListReference implements ReferenceInterface
     }
 
     /**
-     * Indicates if the reference should persist/flush.
+     * Indicates if the reference should persist.
      *
      * @param DocumentInterface $doc Document
      *
      * @return bool
      */
-    public function shouldHandle(DocumentInterface $doc): bool
+    public function shouldIndex(DocumentInterface $doc): bool
     {
         return true;
     }

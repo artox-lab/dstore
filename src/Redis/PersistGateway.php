@@ -180,7 +180,7 @@ abstract class PersistGateway extends AbstractGateway
         foreach ($classes as $class) {
             $index = $this->makeIndexByClassName($class);
 
-            if ($index->shouldHandle($doc) === true) {
+            if ($index->shouldIndex($doc) === true) {
                 $index->index($doc);
             }
         }
@@ -204,9 +204,7 @@ abstract class PersistGateway extends AbstractGateway
         foreach ($classes as $class) {
             $index = $this->makeIndexByClassName($class);
 
-            if ($index->shouldHandle($doc) === true) {
-                $index->flush($doc);
-            }
+            $index->flush($doc);
         }
     }
 
@@ -228,7 +226,7 @@ abstract class PersistGateway extends AbstractGateway
         foreach ($classes as $class) {
             $ref = $this->makeReferenceByClassName($class);
 
-            if ($ref->shouldHandle($doc) === true) {
+            if ($ref->shouldIndex($doc) === true) {
                 $ref->persist($doc);
             }
         }
@@ -252,9 +250,7 @@ abstract class PersistGateway extends AbstractGateway
         foreach ($classes as $class) {
             $ref = $this->makeReferenceByClassName($class);
 
-            if ($ref->shouldHandle($doc) === true) {
-                $ref->flush($doc);
-            }
+            $ref->flush($doc);
         }
     }
 

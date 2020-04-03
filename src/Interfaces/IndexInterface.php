@@ -49,12 +49,12 @@ interface IndexInterface
     public function flush(DocumentInterface $doc) : void;
 
     /**
-     * Indicates if the index should index/flush.
+     * Indicates if the index should index.
      *
      * @param DocumentInterface $doc Document
      *
      * @return bool
      */
-    public function shouldHandle(DocumentInterface $doc): bool;
+    public function shouldIndex(DocumentInterface $doc): bool;
 
 }

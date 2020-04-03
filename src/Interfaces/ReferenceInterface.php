@@ -49,12 +49,12 @@ interface ReferenceInterface
     public function flush(DocumentInterface $doc) : void;
 
     /**
-     * Indicates if the reference should persist/flush.
+     * Indicates if the reference should persist.
      *
      * @param DocumentInterface $doc Document
      *
      * @return bool
      */
-    public function shouldHandle(DocumentInterface $doc): bool;
+    public function shouldIndex(DocumentInterface $doc): bool;
 
 }
