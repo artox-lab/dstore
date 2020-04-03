@@ -79,4 +79,16 @@ abstract class DictionaryIndex implements IndexInterface
         $this->index->build($dto, new State([], [], true));
     }
 
+    /**
+     * Indicates if the index should index.
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return bool
+     */
+    public function shouldIndex(DocumentInterface $doc): bool
+    {
+        return true;
+    }
+
 }
