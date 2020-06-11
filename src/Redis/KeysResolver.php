@@ -27,12 +27,14 @@ class KeysResolver
     /**
      * Make temporary key
      *
-     * @param string $hashName Hashed name of key
+     * @param array $values Values
      *
      * @return string
      */
-    public function makeTemporaryKey(string $hashName): string
+    public function makeTemporaryKey(...$values): string
     {
+        $hashName = md5(implode('|', $values));
+
         return sprintf('store:tmp:%s', $hashName);
     }
 

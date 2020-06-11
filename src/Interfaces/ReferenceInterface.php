@@ -19,7 +19,7 @@ interface ReferenceInterface
      *
      * @return string
      */
-    public function getName() : string ;
+    public function getName() : string;
 
     /**
      * State of value
@@ -47,5 +47,14 @@ interface ReferenceInterface
      * @return void
      */
     public function flush(DocumentInterface $doc) : void;
+
+    /**
+     * Indicates if the reference should persist.
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return bool
+     */
+    public function shouldIndex(DocumentInterface $doc): bool;
 
 }

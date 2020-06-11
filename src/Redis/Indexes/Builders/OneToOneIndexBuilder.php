@@ -129,7 +129,7 @@ abstract class OneToOneIndexBuilder
      */
     protected function getSysField(IndexDto $dto) : string
     {
-        return $this->keys->makeSysField($dto->docId, $dto->docType);
+        return $this->keys->makeSysField($dto->docId, $dto->name);
     }
 
     /**

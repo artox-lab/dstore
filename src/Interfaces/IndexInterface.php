@@ -19,7 +19,7 @@ interface IndexInterface
      *
      * @return string
      */
-    public function getName() : string ;
+    public function getName() : string;
 
     /**
      * State of value for filtering documents
@@ -47,5 +47,14 @@ interface IndexInterface
      * @return void
      */
     public function flush(DocumentInterface $doc) : void;
+
+    /**
+     * Indicates if the index should index.
+     *
+     * @param DocumentInterface $doc Document
+     *
+     * @return bool
+     */
+    public function shouldIndex(DocumentInterface $doc): bool;
 
 }

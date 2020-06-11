@@ -61,7 +61,7 @@ class SortedListBuilder extends OneToManyIndexBuilder
 
         foreach ($items as $item) {
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), $item);
+            $transaction->srem($this->getSysKey($dto), (string) $item->getValue());
         }
 
         try {
