@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
-use ArtoxLab\DStore\Redis\Indexes\Values\SortedIndexValue;
+use ArtoxLab\DStore\Interfaces\SortedIndexValueInterface;
 use Predis\CommunicationException;
 use Predis\Response\ServerException;
 use Predis\Transaction\AbortedMultiExecException;
@@ -33,7 +33,6 @@ class SortedListBuilder extends OneToManyIndexBuilder
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $value), $dto->docId);
         }
 
-
         $transaction->del($this->getSysKey($dto));
 
         try {
@@ -46,8 +45,8 @@ class SortedListBuilder extends OneToManyIndexBuilder
     /**
      * Deleting some items from list
      *
-     * @param IndexDto           $dto   Index dto
-     * @param SortedIndexValue[] $items Added items
+     * @param IndexDto                    $dto   Index dto
+     * @param SortedIndexValueInterface[] $items Added items
      *
      * @return void
      */
@@ -61,7 +60,7 @@ class SortedListBuilder extends OneToManyIndexBuilder
 
         foreach ($items as $item) {
             $transaction->zrem($this->keys->makeIndexKey($dto->docType, $dto->name, $item->getValue()), $dto->docId);
-            $transaction->srem($this->getSysKey($dto), (string) $item->getValue());
+            $transaction->srem($this->getSysKey($dto), $item->getValue());
         }
 
         try {
@@ -74,8 +73,8 @@ class SortedListBuilder extends OneToManyIndexBuilder
     /**
      * Adding some items to sorted list
      *
-     * @param IndexDto           $dto   Index dto
-     * @param SortedIndexValue[] $items Added items
+     * @param IndexDto                    $dto   Index dto
+     * @param SortedIndexValueInterface[] $items Added items
      *
      * @return void
      */
@@ -95,7 +94,7 @@ class SortedListBuilder extends OneToManyIndexBuilder
 
             $transaction->sadd(
                 $this->getSysKey($dto),
-                (string) $item->getValue()
+                [$item->getValue()]
             );
         }
 

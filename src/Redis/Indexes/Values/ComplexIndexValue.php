@@ -15,7 +15,7 @@ class ComplexIndexValue
     /**
      * Values
      *
-     * @var int[]
+     * @var mixed[]
      */
     protected $values;
 
@@ -57,7 +57,7 @@ class ComplexIndexValue
     /**
      * Get value
      *
-     * @return int
+     * @return string
      */
     public function getValue(): string
     {

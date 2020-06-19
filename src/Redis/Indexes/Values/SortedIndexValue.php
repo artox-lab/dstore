@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace ArtoxLab\DStore\Redis\Indexes\Values;
 
-class SortedIndexValue
+use ArtoxLab\DStore\Interfaces\SortedIndexValueInterface;
+
+class SortedIndexValue implements SortedIndexValueInterface
 {
     /**
      * Score
@@ -21,7 +23,7 @@ class SortedIndexValue
     /**
      * Value
      *
-     * @var int
+     * @var mixed
      */
     protected $value;
 
@@ -62,15 +64,15 @@ class SortedIndexValue
     /**
      * Get value
      *
-     * @return int
+     * @return string
      */
-    public function getValue(): int
+    public function getValue(): string
     {
         if (empty($this->value) === true) {
             throw new \RuntimeException("Value of SortedIndexValue can't be a empty");
         }
 
-        return $this->value;
+        return (string) $this->value;
     }
 
 }
