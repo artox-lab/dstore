@@ -103,7 +103,7 @@ abstract class OneToOneIndexBuilder
     protected function beginTransaction(IndexDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name), 1, '');
+        $transaction->setex($this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name), 3, '');
 
         return $transaction;
     }
