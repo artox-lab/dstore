@@ -124,7 +124,7 @@ abstract class ReferenceListBuilder
     protected function beginTransaction(ReferenceDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name), 1, '');
+        $transaction->setex($this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name), 3, '');
 
         return $transaction;
     }
