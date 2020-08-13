@@ -15,7 +15,7 @@ class ComplexIndexValue
     /**
      * Values
      *
-     * @var int[]
+     * @var mixed[]
      */
     protected $values;
 
@@ -41,19 +41,23 @@ class ComplexIndexValue
     /**
      * Add value
      *
-     * @param int $value Value
+     * @param mixed $value Value
      *
      * @return void
      */
-    public function addParam(int $value): void
+    public function addParam($value): void
     {
+        if (is_scalar($value) === false) {
+            throw new \InvalidArgumentException("Value must have a scalar type");
+        }
+
         $this->values[] = $value;
     }
 
     /**
      * Get value
      *
-     * @return int
+     * @return string
      */
     public function getValue(): string
     {
