@@ -71,7 +71,11 @@ abstract class PersistGateway extends AbstractGateway
     protected function beginTransaction(DocumentInterface $doc) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocKey($doc->getDocType(), $doc->getDocId()), 3, "");
+        $transaction->setex(
+            $this->keys->makeWatchingOnDocKey($doc->getDocType(), $doc->getDocId()),
+            RedisConstants::SETEX_TIMEOUT,
+            ""
+        );
 
         return $transaction;
     }

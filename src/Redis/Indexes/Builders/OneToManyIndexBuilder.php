@@ -9,6 +9,7 @@ namespace ArtoxLab\DStore\Redis\Indexes\Builders;
 
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\KeysResolver;
+use ArtoxLab\DStore\Redis\RedisConstants;
 use Predis\Client;
 use Predis\ClientInterface;
 use Predis\Transaction\MultiExec;
@@ -112,7 +113,11 @@ abstract class OneToManyIndexBuilder
     protected function beginTransaction(IndexDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name), 3, '');
+        $transaction->setex(
+            $this->keys->makeWatchingOnDocIndexKey($dto->docType, $dto->docId, $dto->name),
+            RedisConstants::SETEX_TIMEOUT,
+            ''
+        );
 
         return $transaction;
     }

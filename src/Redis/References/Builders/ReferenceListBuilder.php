@@ -8,6 +8,7 @@
 namespace ArtoxLab\DStore\Redis\References\Builders;
 
 use ArtoxLab\DStore\Interfaces\SerializerInterface;
+use ArtoxLab\DStore\Redis\RedisConstants;
 use ArtoxLab\DStore\Redis\References\Builders\ReferenceDto;
 use ArtoxLab\DStore\Redis\Indexes\State;
 use ArtoxLab\DStore\Redis\KeysResolver;
@@ -124,7 +125,11 @@ abstract class ReferenceListBuilder
     protected function beginTransaction(ReferenceDto $dto) : MultiExec
     {
         $transaction = $this->redis->transaction();
-        $transaction->setex($this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name), 3, '');
+        $transaction->setex(
+            $this->keys->makeWatchingOnDocReferenceKey($dto->docType, $dto->docId, $dto->name),
+            RedisConstants::SETEX_TIMEOUT,
+            ''
+        );
 
         return $transaction;
     }
