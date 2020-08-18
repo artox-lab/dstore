@@ -64,6 +64,8 @@ abstract class AbstractEntityBuilder
             return;
         }
 
+        $attrs = $this->normalizeRequiredFields($attrs);
+
         $this->entity = $this->makeEntity($attrs);
     }
 
@@ -75,11 +77,11 @@ abstract class AbstractEntityBuilder
     abstract public function getEntity();
 
     /**
-     * Validation rules
+     * Requried fields
      *
-     * @return Assert\Collection
+     * @return array
      */
-    abstract protected function getRules(): Assert\Collection;
+    abstract protected function getRequiredFields(): array;
 
     /**
      * Returns new object of entity
@@ -91,6 +93,22 @@ abstract class AbstractEntityBuilder
     abstract protected function makeEntity(array $attrs): Entity;
 
     /**
+     * Normilize required fields
+     *
+     * @param array $attrs attributes
+     *
+     * @return array
+     */
+    protected function normalizeRequiredFields(array $attrs): array
+    {
+        foreach ($this->getRequiredFields() as $field => $type) {
+            settype($attrs[$field], $type);
+        }
+
+        return $attrs;
+    }
+
+    /**
      * Validation of attributes
      *
      * @param array $attrs Attributes
@@ -99,8 +117,13 @@ abstract class AbstractEntityBuilder
      */
     protected function validate(array $attrs): bool
     {
-        $validator = Validation::createValidator();
-        $errors    = $validator->validate($attrs, $this->getRules());
+        $errors = [];
+
+        foreach ($this->getRequiredFields() as $field => $type) {
+            if (array_key_exists($field, $attrs) === false) {
+                $errors[] = sprintf('field %s is required', $field);
+            }
+        }
 
         if (count($errors) > 0) {
             $this->logger->error($this->buildLogMessage($attrs, $errors));
@@ -113,12 +136,12 @@ abstract class AbstractEntityBuilder
     /**
      * Builds error message for logging
      *
-     * @param array                            $attrs  Attributes
-     * @param ConstraintViolationListInterface $errors Validation errors
+     * @param array $attrs  Attributes
+     * @param array $errors Validation errors
      *
      * @return string
      */
-    protected function buildLogMessage(array $attrs, ConstraintViolationListInterface $errors) : string
+    protected function buildLogMessage(array $attrs, array $errors) : string
     {
         $message = sprintf(
             '%s got invalid attributes %s, errors: ',
@@ -127,7 +150,7 @@ abstract class AbstractEntityBuilder
         );
 
         foreach ($errors as $error) {
-            $message .= $error->getMessage() . PHP_EOL;
+            $message .= $error . PHP_EOL;
         }
 
         return $message;
