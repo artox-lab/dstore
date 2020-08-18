@@ -99,11 +99,11 @@ abstract class AbstractEntityBuilder
      */
     protected function validate(array $attrs): bool
     {
-        $validator = Validation::createValidator();
-        $errors    = $validator->validate($attrs, $this->getRules());
+        if (empty($attrs) === true) {
+            return false;
+        }
 
-        if (count($errors) > 0) {
-            $this->logger->error($this->buildLogMessage($attrs, $errors));
+        if (empty(array_diff_key($this->getRules()->fields, $attrs)) === false) {
             return false;
         }
 
