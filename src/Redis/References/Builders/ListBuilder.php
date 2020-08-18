@@ -53,6 +53,8 @@ class ListBuilder extends ReferenceListBuilder
             return;
         }
 
+        $this->watch($dto);
+
         $actual   = $this->getActualState($dto);
         $newState = array_diff($actual, $items);
         $newState = array_values($newState);
@@ -93,11 +95,12 @@ class ListBuilder extends ReferenceListBuilder
             return;
         }
 
+        $this->watch($dto);
+
         $actual = $this->getActualState($dto);
+        $newState = array_unique(array_merge($actual, $items));
 
         $transaction = $this->beginTransaction($dto);
-
-        $newState = array_unique(array_merge($actual, $items));
 
         $transaction->hset(
             $this->keys->makeReferenceKey($dto->docType),
