@@ -9,12 +9,10 @@ declare(strict_types=1);
 namespace ArtoxLab\DStore\Redis;
 
 use ArtoxLab\DStore\Interfaces\SerializerInterface;
+use ArtoxLab\DStore\Validators\Collection;
+use ArtoxLab\DStore\Validators\Validator;
 use ArtoxLab\Entities\Entity;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractEntityBuilder
 {
@@ -77,9 +75,9 @@ abstract class AbstractEntityBuilder
     /**
      * Validation rules
      *
-     * @return Assert\Collection
+     * @return Collection
      */
-    abstract protected function getRules(): Assert\Collection;
+    abstract protected function getRules(): Collection;
 
     /**
      * Returns new object of entity
@@ -99,10 +97,10 @@ abstract class AbstractEntityBuilder
      */
     protected function validate(array $attrs): bool
     {
-        $validator = Validation::createValidator();
-        $errors    = $validator->validate($attrs, $this->getRules());
+        $validator = new Validator($this->getRules());
+        $validator->validate($attrs);
 
-        if (count($errors) > 0) {
+        if (empty($errors = $validator->getErrors()) === false) {
             $this->logger->error($this->buildLogMessage($attrs, $errors));
             return false;
         }
@@ -113,12 +111,12 @@ abstract class AbstractEntityBuilder
     /**
      * Builds error message for logging
      *
-     * @param array                            $attrs  Attributes
-     * @param ConstraintViolationListInterface $errors Validation errors
+     * @param array $attrs  Attributes
+     * @param array $errors Validation errors
      *
      * @return string
      */
-    protected function buildLogMessage(array $attrs, ConstraintViolationListInterface $errors) : string
+    protected function buildLogMessage(array $attrs, array $errors) : string
     {
         $message = sprintf(
             '%s got invalid attributes %s, errors: ',
@@ -127,7 +125,7 @@ abstract class AbstractEntityBuilder
         );
 
         foreach ($errors as $error) {
-            $message .= $error->getMessage() . PHP_EOL;
+            $message .= $error . PHP_EOL;
         }
 
         return $message;
