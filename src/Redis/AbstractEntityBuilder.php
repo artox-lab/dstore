@@ -64,6 +64,8 @@ abstract class AbstractEntityBuilder
             return;
         }
 
+        $attrs = $this->normalizeFields($attrs);
+
         $this->entity = $this->makeEntity($attrs);
     }
 
@@ -75,11 +77,11 @@ abstract class AbstractEntityBuilder
     abstract public function getEntity();
 
     /**
-     * Validation rules
+     * Requried fields
      *
-     * @return Assert\Collection
+     * @return array
      */
-    abstract protected function getRules(): Assert\Collection;
+    abstract protected function getSchema(): array;
 
     /**
      * Returns new object of entity
@@ -91,6 +93,73 @@ abstract class AbstractEntityBuilder
     abstract protected function makeEntity(array $attrs): Entity;
 
     /**
+     * Normalize required fields
+     *
+     * @param array $attrs attributes
+     *
+     * @return array
+     */
+    protected function normalizeFields(array $attrs): array
+    {
+        foreach ($this->getSchema() as $field => $type) {
+            if (empty($type) === true) {
+                continue;
+            }
+
+            if (is_array($type) === true) {
+                $attrs[$type] = $this->normalizeFields($type);
+                continue;
+            }
+
+            if ($this->isNullAllowed($type) === false) {
+                settype($attrs[$field], $type);
+                continue;
+            }
+
+            if (array_key_exists($field, $attrs) === false) {
+                $attrs[$field] = null;
+                continue;
+            }
+
+            $typeWithoutNullableSign = substr($type, 1, (strlen($type) - 1));
+
+            if (in_array($typeWithoutNullableSign, ['int', 'float']) === false) {
+                settype($attrs[$field], $typeWithoutNullableSign);
+                continue;
+            }
+
+            if ($attrs[$field] === 0) {
+                continue;
+            }
+
+            if (empty($attrs[$field]) === true) {
+                $attrs[$field] = null;
+                continue;
+            }
+
+            settype($attrs[$field], $typeWithoutNullableSign);
+        }
+
+        return $attrs;
+    }
+
+    /**
+     * Is null allowed in schema field
+     *
+     * @param string $type Field type
+     *
+     * @return bool
+     */
+    protected function isNullAllowed(string $type): bool
+    {
+        if (empty($type) === true) {
+            return false;
+        }
+
+        return $type[0] === '?';
+    }
+
+    /**
      * Validation of attributes
      *
      * @param array $attrs Attributes
@@ -99,8 +168,21 @@ abstract class AbstractEntityBuilder
      */
     protected function validate(array $attrs): bool
     {
-        $validator = Validation::createValidator();
-        $errors    = $validator->validate($attrs, $this->getRules());
+        $errors = [];
+
+        foreach ($this->getSchema() as $field => $type) {
+            if (is_array($type) === true) {
+                continue;
+            }
+
+            if ($this->isNullAllowed($type) === true) {
+                continue;
+            }
+
+            if (array_key_exists($field, $attrs) === false) {
+                $errors[] = sprintf('field %s is required', $field);
+            }
+        }
 
         if (count($errors) > 0) {
             $this->logger->error($this->buildLogMessage($attrs, $errors));
@@ -113,12 +195,12 @@ abstract class AbstractEntityBuilder
     /**
      * Builds error message for logging
      *
-     * @param array                            $attrs  Attributes
-     * @param ConstraintViolationListInterface $errors Validation errors
+     * @param array $attrs  Attributes
+     * @param array $errors Validation errors
      *
      * @return string
      */
-    protected function buildLogMessage(array $attrs, ConstraintViolationListInterface $errors) : string
+    protected function buildLogMessage(array $attrs, array $errors) : string
     {
         $message = sprintf(
             '%s got invalid attributes %s, errors: ',
@@ -127,7 +209,7 @@ abstract class AbstractEntityBuilder
         );
 
         foreach ($errors as $error) {
-            $message .= $error->getMessage() . PHP_EOL;
+            $message .= $error . PHP_EOL;
         }
 
         return $message;
