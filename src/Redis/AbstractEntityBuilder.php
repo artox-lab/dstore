@@ -93,7 +93,7 @@ abstract class AbstractEntityBuilder
     abstract protected function makeEntity(array $attrs): Entity;
 
     /**
-     * Normilize required fields
+     * Normalize required fields
      *
      * @param array $attrs attributes
      *
@@ -171,6 +171,10 @@ abstract class AbstractEntityBuilder
         $errors = [];
 
         foreach ($this->getSchema() as $field => $type) {
+            if (is_array($type) === true) {
+                continue;
+            }
+
             if ($this->isNullAllowed($type) === true) {
                 continue;
             }
