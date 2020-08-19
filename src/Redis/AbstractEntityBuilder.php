@@ -107,7 +107,10 @@ abstract class AbstractEntityBuilder
             }
 
             if (is_array($type) === true) {
-                $attrs[$type] = $this->normalizeFields($type);
+                if (array_key_exists($field, $attrs) === true) {
+                    $attrs[$field] = $this->normalizeFields($attrs[$field]);
+                }
+
                 continue;
             }
 
