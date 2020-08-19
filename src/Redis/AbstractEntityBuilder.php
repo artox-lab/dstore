@@ -121,10 +121,10 @@ abstract class AbstractEntityBuilder
                 continue;
             }
 
-            $type = substr($type, 1, (strlen($type) - 1));
+            $typeWithoutNullableSign = substr($type, 1, (strlen($type) - 1));
 
-            if (in_array($type, ['int', 'float']) === false) {
-                settype($attrs[$field], $type);
+            if (in_array($typeWithoutNullableSign, ['int', 'float']) === false) {
+                settype($attrs[$field], $typeWithoutNullableSign);
                 continue;
             }
 
@@ -134,7 +134,10 @@ abstract class AbstractEntityBuilder
 
             if (empty($attrs[$field]) === true) {
                 $attrs[$field] = null;
+                continue;
             }
+
+            settype($attrs[$field], $typeWithoutNullableSign);
         }
 
         return $attrs;
@@ -188,8 +191,8 @@ abstract class AbstractEntityBuilder
     /**
      * Builds error message for logging
      *
-     * @param array                            $attrs  Attributes
-     * @param ConstraintViolationListInterface $errors Validation errors
+     * @param array $attrs  Attributes
+     * @param array $errors Validation errors
      *
      * @return string
      */
