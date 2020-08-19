@@ -64,7 +64,7 @@ abstract class AbstractEntityBuilder
             return;
         }
 
-        $attrs = $this->normalizeRequiredFields($attrs);
+        $attrs = $this->normalizeFields($attrs);
 
         $this->entity = $this->makeEntity($attrs);
     }
@@ -81,7 +81,7 @@ abstract class AbstractEntityBuilder
      *
      * @return array
      */
-    abstract protected function getRequiredFields(): array;
+    abstract protected function getSchema(): array;
 
     /**
      * Returns new object of entity
@@ -99,13 +99,56 @@ abstract class AbstractEntityBuilder
      *
      * @return array
      */
-    protected function normalizeRequiredFields(array $attrs): array
+    protected function normalizeFields(array $attrs): array
     {
-        foreach ($this->getRequiredFields() as $field => $type) {
-            settype($attrs[$field], $type);
+        foreach ($this->getSchema() as $field => $type) {
+            if (empty($type) === true) {
+                continue;
+            }
+
+            if (is_array($type) === true) {
+                $attrs[$type] = $this->normalizeFields($type);
+                continue;
+            }
+
+            if ($this->isNullAllowed($type) === false) {
+                settype($attrs[$field], $type);
+                continue;
+            }
+
+            $type = substr($type, 1, (strlen($type) - 1));
+
+            if (in_array($type, ['int', 'float']) === false) {
+                settype($attrs[$field], $type);
+                continue;
+            }
+
+            if ($attrs[$field] === 0) {
+                continue;
+            }
+
+            if (empty($attrs[$field]) === true) {
+                $attrs[$field] = null;
+            }
         }
 
         return $attrs;
+    }
+
+    /**
+     * Is null allowed in schema field
+     *
+     * @param string $type Field type
+     *
+     * @return bool
+     */
+    protected function isNullAllowed(string $type): bool
+    {
+        if (empty($type) === true) {
+            return false;
+        }
+
+        return $type[0] === '?';
     }
 
     /**
@@ -119,7 +162,11 @@ abstract class AbstractEntityBuilder
     {
         $errors = [];
 
-        foreach ($this->getRequiredFields() as $field => $type) {
+        foreach ($this->getSchema() as $field => $type) {
+            if ($this->isNullAllowed($type) === true) {
+                continue;
+            }
+
             if (array_key_exists($field, $attrs) === false) {
                 $errors[] = sprintf('field %s is required', $field);
             }
@@ -136,8 +183,8 @@ abstract class AbstractEntityBuilder
     /**
      * Builds error message for logging
      *
-     * @param array $attrs  Attributes
-     * @param array $errors Validation errors
+     * @param array                            $attrs  Attributes
+     * @param ConstraintViolationListInterface $errors Validation errors
      *
      * @return string
      */
