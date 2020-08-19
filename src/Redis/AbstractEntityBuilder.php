@@ -116,6 +116,11 @@ abstract class AbstractEntityBuilder
                 continue;
             }
 
+            if (array_key_exists($field, $attrs) === false) {
+                $attrs[$field] = null;
+                continue;
+            }
+
             $type = substr($type, 1, (strlen($type) - 1));
 
             if (in_array($type, ['int', 'float']) === false) {
