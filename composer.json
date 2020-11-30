@@ -13,7 +13,7 @@
         "predis/predis": "^1.1",
         "ext-json": "*",
         "artox-lab/entities": "dev-master",
-        "symfony/validator": "4.3.*",
+        "symfony/validator": "5.2.*",
         "psr/log": "^1.1@dev"
     },
     "require-dev": {
